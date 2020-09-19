@@ -17,7 +17,7 @@ To install this project you can:
 ## Usage Instructions
 
 When the main folder is installed, you can open it in a terminal and use one of the following commands to launch it.
-```js
+```bash
 node index.js
 # or
 npm start
