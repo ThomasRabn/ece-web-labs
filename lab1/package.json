@@ -1,0 +1,21 @@
+{
+  "name": "lab1",
+  "version": "0.0.0",
+  "description": "Little node lab",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ece-web-labs"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Thomas",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
