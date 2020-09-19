@@ -1,4 +1,4 @@
-# ece-web-labs
+# ECE Web Technologies Labs
 
 ## Introduction
 
