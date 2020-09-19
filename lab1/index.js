@@ -1,5 +1,4 @@
 const express = require('express');
-const handle = require('./handles.js');
 
 const app = express();
 const port = 8080;

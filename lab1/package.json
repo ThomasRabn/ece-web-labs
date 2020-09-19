@@ -1,17 +1,20 @@
 {
   "name": "lab1",
   "version": "0.0.0",
-  "description": "Little node lab",
+  "description": "Lab1 of ECE Web Technologies course",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "ece-web-labs"
   },
   "keywords": [
-    "node"
+    "node",
+    "express",
+    "web-server",
+    "lab1"
   ],
   "author": "Thomas",
   "license": "MIT",
