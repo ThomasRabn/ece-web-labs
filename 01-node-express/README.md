@@ -6,7 +6,7 @@ This is the repository of the first web technologies lab. This lab is about crea
 
 ## Functionnalities
 
-When the index.js is called using **node index.js** or when the user writes **npm start** in his terminal, it will start the web server on his computer. The web server is in localhost and listening to the port 8080. When trying to connect to the webserver with one URL parameter (for example: *http://localhost:8080/Pierre*), the server will return '**Hello *parameter*!**' (in this case: *Hello Pierre!*). If the user does not precise **exactly** one parameter, the server will return a 404 status with the text message: 'Error 404! Make sure to have exactly 1 parameter in you GET request!'. 
+When the index.js is called using **node index.js** or when the user writes **npm start** in his terminal, it will start the web server on his computer. The web server is in localhost and listening to the port 8080. When connecting to the server without parameters, it grants you with a salute message. When trying to connect to the webserver with one URL parameter (for example: *http://localhost:8080/Pierre*), the server will return '**Hello *parameter*!**' (in this case: *Hello Pierre!*). If the user does not precise **exactly** one or no parameter, the server will return a 404 status with the text message: 'Error 404! Make sure to have exactly 1 parameter in you GET request!'. 
 
 ## Installation
 
