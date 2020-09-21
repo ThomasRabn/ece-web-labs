@@ -25,3 +25,7 @@ npm start
 npm run start
 ```
 A local web server listening to the port 8080 will then be up. It will return '**Hello *parameter*!**' when someone tries to connect to it with a parameter in the GET method such as: *http://localhost:8080/parameter*.
+
+## Author
+
+Thomas Rabian ING4 SI Grp3 - Contact: thomas.rabian@edu.ece.fr

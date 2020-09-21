@@ -6,4 +6,4 @@ This repository's purpose is to store every Web Technologies' Lab of the semeste
 
 ## Contact
 
-In case there is any issue regarding the labs, you can contact me at thomas.rabian@gmail.com 
+In case there is any issue regarding the labs, you can contact me at thomas.rabian@edu.ece.fr 
