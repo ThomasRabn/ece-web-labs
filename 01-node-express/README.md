@@ -32,4 +32,6 @@ A local web server listening to the port 8080 will then be up. It will return '*
 
 ## Author
 
-Thomas Rabian ING4 SI Grp3 - Contact: thomas.rabian@edu.ece.fr
+Thomas RABIAN ING4 SI Grp3 - Contact: thomas.rabian@edu.ece.fr
+
+Thomas BASTIDE ING4 SI GRP3 - Contact: thomas.bastide@edu.ece.fr
