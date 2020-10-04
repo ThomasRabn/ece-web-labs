@@ -27,7 +27,8 @@ describe('users', () => {
     .get('/users')
     .expect(200)
     users.should.match([{
-      id: /^\w+-\w+-\w+-\w+-\w+$/,
+      //id: /^\w+-\w+-\w+-\w+-\w+$/,
+      id: /^users:\w+-\w+-\w+-\w+-\w+$/,
       username: 'user_1'
     }])
   })

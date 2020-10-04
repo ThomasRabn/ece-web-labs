@@ -2,14 +2,14 @@
 const {v4: uuid} = require('uuid') //utilisation de la syntaxe https://codeburst.io/es6-destructuring-the-complete-guide-7f842d08b98f
 const {clone, merge} = require('mixme') //pareil. Ces fonctions permettes de d'éviter des problèmes de pointeurs...
 //Création d'une "base de données" fake
-const store =  {
+/*const store =  {
   channels: {
   },
   users : {
   },
   messages : {
   }
-}
+}*/
 //Lignes à décommenter ici permettant d'utiliser level
 const level = require('level')
 const db = level(__dirname + '/../db')
@@ -19,7 +19,7 @@ module.exports = {
     create: async (channel) => { //Syntaxe arrow function : https://javascript.info/arrow-functions-basics
       if(!channel.name) throw Error('Invalid channel')
       const id = uuid()
-      store.channels[id] = channel
+      //store.channels[id] = channel
       //Ligne à décommenter en dessous pour avoir notre écriture en base de données
       //La clé en base de données seras sous la format channels:randomId (genere par la fonction uuid : https://fr.wikipedia.org/wiki/Universally_unique_identifier#:~:text=Universally%20unique%20identifier%20(UUID)%2C,information%20sans%20coordination%20centrale%20importante.
       await db.put(`channels:${id}`, JSON.stringify(channel))
@@ -27,13 +27,13 @@ module.exports = {
     },
     list: async () => {
       //Object.keys : https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/keys
-      return Object.keys(store.channels).map( (id) => {
+      /*return Object.keys(store.channels).map( (id) => {
         const channel = clone(store.channels[id])
         channel.id = id
         return channel
-      })
+      })*/
       //à décommenter en dessous pour avoir notre lecture en base de données : https://github.com/Level/level#createReadStream
-   return new Promise( (resolve, reject) => {
+      return new Promise( (resolve, reject) => {
         const channels = []
         db.createReadStream({
           gt: "channels:",
@@ -50,21 +50,25 @@ module.exports = {
       })
     },
     update: (id, channel) => {
-      const original = store.channels[id]
-      if(!original) throw Error('Unregistered channel id')
-      store.channels[id] = merge(original, channel) //à transformer pour avoir une modification dans la base de données
+      db.del(`channels:${id}`, function (err) {
+        if (err)
+          throw Error('Unregistered channel id')
+      });
+      db.put(`channels:${id}`, JSON.stringify(channel))
+      
     },
     delete: (id, channel) => {
-      const original = store.channels[id]
-      if(!original) throw Error('Unregistered channel id')
-      delete store.channels[id] //à transformer pour avoir une suppression en base de données : https://github.com/Level/level#del
+      db.del(`channels:${id}`, function (err) {
+        if (err)
+          throw Error('Unregistered channel id')
+      });
     }
   },
   users: {
     create: async (user) => { //Syntaxe arrow function : https://javascript.info/arrow-functions-basics
       if(!user.username) throw Error('Invalid user')
       const id = uuid()
-      store.users[id] = user
+      //store.users[id] = user
       //Ligne à décommenter en dessous pour avoir notre écriture en base de données
       //La clé en base de données seras sous la format users:randomId (genere par la fonction uuid : https://fr.wikipedia.org/wiki/Universally_unique_identifier#:~:text=Universally%20unique%20identifier%20(UUID)%2C,information%20sans%20coordination%20centrale%20importante.
       await db.put(`users:${id}`, JSON.stringify(user))
@@ -72,13 +76,13 @@ module.exports = {
     },
     list: async () => {
       //Object.keys : https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/keys
-      return Object.keys(store.users).map( (id) => {
+      /*return Object.keys(store.users).map( (id) => {
         const user = clone(store.users[id])
         user.id = id
         return user
-      })
+      })*/
       //à décommenter en dessous pour avoir notre lecture en base de données : https://github.com/Level/level#createReadStream
-     return new Promise( (resolve, reject) => {
+      return new Promise( (resolve, reject) => {
         const users = []
         db.createReadStream({
           gt: "users:",
@@ -95,14 +99,17 @@ module.exports = {
       })
     },
     update: (id, user) => {
-      const original = store.users[id]
-      if(!original) throw Error('Unregistered user id')
-      store.users[id] = merge(original, user) //à transformer pour avoir une modification dans la base de données
+      db.del(`users:${id}`, function (err) {
+        if (err)
+          throw Error('Unregistered user id')
+      });
+      db.put(`users:${id}`, JSON.stringify(user))
     },
     delete: (id, user) => {
-      const original = store.users[id]
-      if(!original) throw Error('Unregistered user id')
-      delete store.users[id] //à transformer pour avoir une suppression en base de données : https://github.com/Level/level#del
+      db.del(`users:${id}`, function (err) {
+        if (err)
+          throw Error('Unregistered user id')
+      });
     }
   },
   messages: {
@@ -110,7 +117,7 @@ module.exports = {
       if(!message.content) throw Error('Invalid message')
       //if(!message.creation) throw Error('Invalid message')
       const id = uuid()
-      store.messages[id] = message
+      //store.messages[id] = message
       //Ligne à décommenter en dessous pour avoir notre écriture en base de données
       //La clé en base de données seras sous la format messages:randomId (genere par la fonction uuid : https://fr.wikipedia.org/wiki/Universally_unique_identifier#:~:text=Universally%20unique%20identifier%20(UUID)%2C,information%20sans%20coordination%20centrale%20importante.
       await db.put(`messages:${id}`, JSON.stringify(message))
@@ -118,13 +125,13 @@ module.exports = {
     },
     list: async () => {
       //Object.keys : https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/keys
-      return Object.keys(store.messages).map( (id) => {
+      /*return Object.keys(store.messages).map( (id) => {
         const message = clone(store.messages[id])
         message.id = id
         return message
-      })
+      })*/
       //à décommenter en dessous pour avoir notre lecture en base de données : https://github.com/Level/level#createReadStream
-    return new Promise( (resolve, reject) => {
+      return new Promise( (resolve, reject) => {
         const messages = []
         db.createReadStream({
           gt: "messages:",
@@ -141,21 +148,24 @@ module.exports = {
       })
     },
     update: (id, message) => {
-      const original = store.messages[id]
-      if(!original) throw Error('Unregistered message id')
-      store.messages[id] = merge(original, message) //à transformer pour avoir une modification dans la base de données
+      db.del(`messages:${id}`, function (err) {
+        if (err)
+          throw Error('Unregistered message id')
+      });
+      db.put(`messages:${id}`, JSON.stringify(message))
     },
     delete: (id, message) => {
-      const original = store.messages[id]
-      if(!original) throw Error('Unregistered message id')
-      delete store.messages[id] //à transformer pour avoir une suppression en base de données : https://github.com/Level/level#del
+      db.del(`messages:${id}`, function (err) {
+        if (err)
+          throw Error('Unregistered message id')
+      });
     }
   },
   admin: {
     clear: async () => {
-      store.channels = {}
+      /*ùstore.channels = {}
       store.users = {}
-      store.messages = {}
+      store.messages = {}*/
       //ligne à décommenter pour effacer tous le contenu de la base de données level : https://github.com/Level/level#clear
       await db.clear()
     }

@@ -33,6 +33,6 @@
     "recursive": true
   },
   "scripts": {
-    "test": "mocha 'test/**/*.js'"
+    "test": "npx mocha 'test/**/*.js'"
   }
 }
