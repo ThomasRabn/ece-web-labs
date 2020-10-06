@@ -4,11 +4,11 @@ const app = require('../lib/app')
 const db = require('../lib/db')
 
 describe('users', () => {
-
+  
   beforeEach( async () => {
     await db.admin.clear()
   })
-
+  
   it('list empty', async () => {
     // Return an empty user list by default
     const {body: users} = await supertest(app)
@@ -16,7 +16,7 @@ describe('users', () => {
     .expect(200)
     users.should.match([])
   })
-
+  
   it('list one element', async () => {
     // Create a user
     await supertest(app)
@@ -27,12 +27,11 @@ describe('users', () => {
     .get('/users')
     .expect(200)
     users.should.match([{
-      //id: /^\w+-\w+-\w+-\w+-\w+$/,
       id: /^users:\w+-\w+-\w+-\w+-\w+$/,
       username: 'user_1'
     }])
   })
-
+  
   it('add one element', async () => {
     // Create a user
     const {body: user} = await supertest(app)
@@ -45,5 +44,5 @@ describe('users', () => {
     .get('/users')
     users.length.should.eql(1)
   })
-
+  
 })

@@ -27,7 +27,6 @@ describe('channels', () => {
     .get('/channels')
     .expect(200)
     channels.should.match([{
-      //id: /^\w+-\w+-\w+-\w+-\w+$/,
       id: /^channels:\w+-\w+-\w+-\w+-\w+$/,
       name: 'channel 1'
     }])

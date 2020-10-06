@@ -1,23 +1,28 @@
 
-# ECE WebTech Chat
+# LAB 3 - Tests & Storage
 
-This is a chat application we wrote to learn the basics and the not so basics features of backend and frontend web programing. It leverages Node.js and React as well as complementary technologies such as unit testing with Mocha and Should.js, embeded storage with LevelDB, REST APIs, ... If we have time, we'll also play with GraphQL and Socket.io
+## Introduction
+
+This is the repository of the 3rd webtech lab. This lab is about learning how to do unit testing with Mocha.js, as well as learning how to use LevelDB database. Behind the tests, there is a basic WebChat application. Our goal is to test its principal functionnalities.
+
+## Installation
+
+To install this project you can:
+- Clone the repository on you computer
+- Download the zip file and extract it wherever your want on you computer
 
 ## Usage
 
-Start the web application:
+The usage of this lab is not really interesting. Its only purpose is to test that the actual code is working. To launch the tests, you can open a shell and type:
 
 ```bash
-./bin/start 
-Chat is waiting for you at http://localhost:3000
+npm install
+npm test
 ```
 
-Run the tests with mocha:
+This should run the 9 tests that will verify the basic functionnalities of the WebChat application. The 9 tests should pass without any error or problem. However, if you face some problems, we advise you to verify the integrity of your download and run the commands again. If you still face a problem, you can contact us at any time on our email addresses.
 
-```bash
-npm run test
-```
+## Author
 
-## Instructions
-
-See "../lab.md" for the lab instructions.
+Thomas RABIAN ING4 SI Grp3 - Contact: thomas.rabian@edu.ece.fr
+Thomas BASTIDE ING4 SI GRP3 - Contact: thomas.bastide@edu.ece.fr
