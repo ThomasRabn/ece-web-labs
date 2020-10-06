@@ -20,7 +20,7 @@
     "ece",
     "nodejs"
   ],
-  "license": "MIT",
+  "license": "0BSD",
   "main": "./lib/index.js",
   "mocha": {
     "throw-deprecation": true,
