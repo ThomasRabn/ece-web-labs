@@ -13,7 +13,7 @@ To install this project you can:
 
 ## Usage
 
-The usage of this lab is not really interesting. Its only purpose is to test that the actual code is working. To launch the tests, you can open a shell and type:
+The repository is divided into 2 parts: the 'version-without-database' part and the 'version-with-database' part. They are stored in 2 different folders to make it easily understandable. You can choose the version you want to use. The only purpose of the lab is to test that the actual code is working. To launch the tests, you can open a shell and type:
 
 ```bash
 npm install
