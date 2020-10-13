@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
 
 class SendMessage extends React.Component {
 
@@ -87,14 +88,14 @@ class ProductTable extends React.Component {
         });
     
         return (
-            <table>
+            <Table striped hover>
                 <thead>
                     <tr>
                         <th id="subtitle">Former messages</th>
                     </tr>
                 </thead>
                 <tbody>{rows}</tbody>
-            </table>
+            </Table>
         );
     }
 }

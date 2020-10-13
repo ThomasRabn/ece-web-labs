@@ -35,6 +35,10 @@
     margin-top: 8px;
 }
 
+Table {
+    table-layout:fixed;
+}
+
 ol, ul {
     padding-left: 30px;
 }
