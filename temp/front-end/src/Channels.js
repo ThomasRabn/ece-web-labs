@@ -6,31 +6,24 @@ const axios = require('axios');
 
 const styles = {
     channels: {
-        minWidth: '200px',
+        minWidth: '200px'
+    },
+    textChannel: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: '1.2em'
     }
 }
-
-// function getChannels() {
-//     var value;
-//     axios.get('localhost:3001/channels')
-//         .then((response) => {
-//             value = response;
-//         });
-//     return value;
-// }
 
 export default () => {
     const [channels, setChannels] = useState([]);
 
     useEffect(() => {
         async function fetchData() {
-            let { data } = await axios.get('localhost:3001/channels', {
-                headers: {
-                    'Access-Control-Allow': '*',
-                    'Access-Control-Allow-Credentials': 'true'
-                }
-            });
-            console.log(data);
+            let { data } = await axios.get('http://localhost:3001/channels');
+            data = data.sort((a, b) => {
+                return a.name < b.name ? -1 : 1;
+            })
             setChannels(data);
         }
         fetchData();
@@ -40,7 +33,7 @@ export default () => {
             <ul>
                 {channels.map((channel, i) => (
                     <li key={i}>
-                        <a href='localhost:3000/'>{channel.name}</a>
+                        <a css={styles.textChannel} href='http://localhost:3000/'>{channel.name}</a>
                     </li>
                 ))}
             </ul>

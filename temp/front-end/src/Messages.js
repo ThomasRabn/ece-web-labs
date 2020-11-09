@@ -47,7 +47,7 @@ export default ({
                                 message.content
                                     .split(/(\n +\n)/)
                                     .filter(el => el.trim())
-                                    .map(el => <p>{el}</p>)
+                                    .map((el, i) => <p key={i}>{el}</p>)
                             }
                         </div>
                     </li>
