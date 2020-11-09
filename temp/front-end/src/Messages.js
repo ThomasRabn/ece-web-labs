@@ -25,10 +25,9 @@ const styles = {
 }
 
 export default ({
-    channel = {
-        name: 'Fake channel'
-    },
-    messages,
+    value,
+    messages = value.messages,
+    channel = value.channel,
     styleDate = {weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'}
 }) => {
     return (

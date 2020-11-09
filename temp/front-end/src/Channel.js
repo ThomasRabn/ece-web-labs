@@ -1,9 +1,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { useState } from 'react';
-
 import Messages from './Messages.js';
 import MessageSend from './MessageSend.js';
+
+const axios = require('axios');
 
 const styles = {
     channel: {
@@ -34,7 +35,11 @@ const styles = {
     }
 }
 
-export default () => {
+export default (
+    channel = {
+        name: 'Fake channel'
+    }
+) => {
     const [messages, setMessages] = useState([{
         author: 'sergei',
         creation: 1602831101929,
@@ -111,15 +116,19 @@ export default () => {
         [Prism](https://prismjs.com/).
         `,
     }])
-    const addMessage = (message) => {
+    const  addMessage = async (message) => {
         setMessages([
             ...messages,
             message
         ])
+        let data = await axios.post('http://localhost:3001/channels/', channel);
+        let info = await axios.post('http://localhost:3001/channels/'+channel.name+'/messages', message);
+        console.log(data);
+        console.log(info);
     }
     return (
         <div css={styles.channel}>
-            <Messages messages={messages}/>
+            <Messages value={{messages,channel}}/>
             <MessageSend addMessage={addMessage} />
         </div>
     );
