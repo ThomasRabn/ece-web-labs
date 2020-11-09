@@ -33,7 +33,7 @@ export default ({
         <div css={styles.messages}>
             <h1>Messages for {channel.name}</h1>
             <ul>
-                {messages.map((message, i) => (
+                {   messages.map((message, i) => (
                     <li key={i} css={styles.message}>
                         <p>
                             <span>{message.author}</span>
