@@ -1,7 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { useState } from 'react';
-import MessageForm from './MessageSend.js';
+
+import Messages from './Messages.js';
+import MessageSend from './MessageSend.js';
 
 const styles = {
     channel: {
@@ -32,11 +34,7 @@ const styles = {
     }
 }
 
-export default (
-    channel = {
-        name: 'Fake channel'
-    }
-) => {
+export default () => {
     const [messages, setMessages] = useState([{
         author: 'sergei',
         creation: 1602831101929,
@@ -121,29 +119,8 @@ export default (
     }
     return (
         <div css={styles.channel}>
-            <div css={styles.messages}>
-                <h1>Messages for {channel.name}</h1>
-                <ul>
-                    {messages.map((message, i) => (
-                        <li key={i} css={styles.message}>
-                            <p>
-                                <span>{message.author}</span>
-                                {' '}
-                                <span>{(new Date(message.creation)).toString()}</span>
-                            </p>
-                            <div>
-                                {
-                                    message.content
-                                        .split(/(\n +\n)/)
-                                        .filter(el => el.trim())
-                                        .map(el => <p>{el}</p>)
-                                }
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            <MessageForm addMessage={addMessage} />
+            <Messages messages={messages}/>
+            <MessageSend addMessage={addMessage} />
         </div>
     );
 }

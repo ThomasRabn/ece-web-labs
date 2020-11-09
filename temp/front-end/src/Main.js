@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
+
 import Channel from './Channel.js';
 import Channels from './Channels.js';
 
