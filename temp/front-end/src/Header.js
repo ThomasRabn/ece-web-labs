@@ -4,7 +4,7 @@ import { jsx } from '@emotion/core';
 const styles = {
     header: {
         height: '60px',
-        backgroundColor: 'rgba(255,255,255,.3)',
+        backgroundColor: 'black',
         flexShrink: 0,
     }
 }
@@ -12,7 +12,7 @@ const styles = {
 export default () => {
     return (
         <header className="App-header" css={styles.header}>
-            <h1>header</h1>
+            <h1>User</h1>
         </header>
     );
 }

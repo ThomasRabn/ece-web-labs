@@ -5,7 +5,7 @@ import { jsx } from '@emotion/core';
 const styles = {
     footer: {
         height: '30px',
-        backgroundColor: 'rgba(255,255,255,.3)',
+        backgroundColor: 'black',
         flexShrink: 0,
     }
 }
