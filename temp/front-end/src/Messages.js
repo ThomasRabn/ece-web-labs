@@ -17,7 +17,9 @@ const styles = {
     message: {
         margin: '.2rem',
         padding: '.2rem',
-        // backgroundColor: '#66728E',
+        backgroundColor: '#66728E',
+        border: '1px solid white',
+        borderRadius: '10px',
         ':hover': {
             backgroundColor: 'rgba(255,255,255,.2)',
         },
@@ -35,13 +37,13 @@ export default ({
             <h1>Messages for {channel.name}</h1>
             <ul>
                 {   messages.map((message, i) => (
-                    <li key={i} css={styles.message}>
+                    <li key={i} >
                         <p>
                             <span>{message.author}</span>
                             {' - '}
                             <span>{(new DateTime.fromISO((new Date(message.creation)).toISOString())).setLocale('en-GB').toLocaleString(styleDate)}</span>
                         </p>
-                        <div>
+                        <div css={styles.message}>
                             {
                                 message.content
                                     .split(/(\n +\n)/)
