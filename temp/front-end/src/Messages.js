@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+const { DateTime } = require("luxon");
 
 const styles = {
     messages: {
@@ -27,7 +28,8 @@ export default ({
     channel = {
         name: 'Fake channel'
     },
-    messages
+    messages,
+    styleDate = {weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'}
 }) => {
     return (
         <div css={styles.messages}>
@@ -37,8 +39,8 @@ export default ({
                     <li key={i} css={styles.message}>
                         <p>
                             <span>{message.author}</span>
-                            {' '}
-                            <span>{(new Date(message.creation)).toString()}</span>
+                            {' - '}
+                            <span>{(new DateTime.fromISO((new Date(message.creation)).toISOString())).setLocale('en-GB').toLocaleString(styleDate)}</span>
                         </p>
                         <div>
                             {
