@@ -35,11 +35,10 @@ const styles = {
     }
 }
 
-export default (
-    channel = {
+export default () => {
+    var channel = {
         name: 'Fake channel'
     }
-) => {
     const [messages, setMessages] = useState([{
         author: 'sergei',
         creation: 1602831101929,
@@ -128,7 +127,7 @@ export default (
     }
     return (
         <div css={styles.channel}>
-            <Messages value={{ messages, channel }} />
+            <Messages messages={messages} channel={channel} />
             <MessageSend addMessage={addMessage} />
         </div>
     );

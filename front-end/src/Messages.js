@@ -28,14 +28,12 @@ const styles = {
 }
 
 export default ({
-    value,
-    messages = value.messages,
-    channel = value.channel,
-    styleDate = {weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'},
+    messages,
+    channel
 }) => {
+    const styleDate = {weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'}
     const messagesEndRef = useRef(null);
     const scrollToBottom = () => {
-        console.log("in")
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
     useEffect(scrollToBottom, [messages]);
