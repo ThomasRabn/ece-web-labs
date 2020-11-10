@@ -116,19 +116,19 @@ export default (
         [Prism](https://prismjs.com/).
         `,
     }])
-    const  addMessage = async (message) => {
+    const addMessage = async (message) => {
         setMessages([
             ...messages,
             message
         ])
         let data = await axios.post('http://localhost:3001/channels/', channel);
-        let info = await axios.post('http://localhost:3001/channels/'+channel.name+'/messages', message);
+        let info = await axios.post('http://localhost:3001/channels/' + channel.name + '/messages', message);
         console.log(data);
         console.log(info);
     }
     return (
         <div css={styles.channel}>
-            <Messages value={{messages,channel}}/>
+            <Messages value={{ messages, channel }} />
             <MessageSend addMessage={addMessage} />
         </div>
     );
