@@ -1,11 +1,12 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
-
+import {useState} from 'react'
 import './App.css';
-import Header from "./Header.js";
-import Main from "./Main.js";
-import Footer from "./Footer.js";
-
+/** @jsx jsx */
+import { jsx } from '@emotion/core'
+// Local
+import Footer from './Footer'
+import Header from './Header'
+import Main from './Main'
+import Login from './Login'
 
 const styles = {
     root: {
@@ -20,10 +21,13 @@ const styles = {
 
 
 export default () => {
+    const [user, setUser] = useState(null)
     return (
         <div className="App" css={styles.root}>
             <Header />
-            <Main />
+            {
+                user ? <Main /> : <Login onUser={setUser} />
+            }
             <Footer />
         </div>
     );

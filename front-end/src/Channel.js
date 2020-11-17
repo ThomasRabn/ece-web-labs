@@ -129,7 +129,7 @@ export default () => {
             // On rentre dedans uniquement si le channel n'existe pas
             occurence = await axios.post('http://localhost:3001/channels/', channel);
         }
-        let info = await axios.post('http://localhost:3001/channels/' + occurence.id + '/messages', message);
+        await axios.post('http://localhost:3001/channels/' + occurence.id + '/messages', message);
     }
     return (
         <div css={styles.channel}>
