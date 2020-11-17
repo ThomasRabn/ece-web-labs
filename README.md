@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository's purpose is to store every Web Technologies' Lab of the semester. Each Lab is stored in a specific folder labelled by number and name. Their README.md file should be at the root of their folder.
+This repository's purpose is to store our Web Technologies' Lab. The latest version of our lab is divided between the 'front-end' and the 'back-end' folders. Their may be a 'old' folder, containing a preivous lab that we wanted to keep for some reason.
 
 ## Contact
 
