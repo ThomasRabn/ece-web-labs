@@ -20,7 +20,6 @@ const styles = {
     content: {
         flex: '1 1 auto',
         color: 'white'
-        //marginRight: '.5rem'
     },
     send: {
         backgroundColor: '#D6DDEC',
@@ -37,6 +36,7 @@ const styles = {
 export default ({
     addMessage
 }) => {
+    const classes = styles
     const [content, setContent] = useState('');
     const onSubmit = (e) => {
         e.preventDefault()
@@ -57,6 +57,9 @@ export default ({
                 id="outlined-multiline-flexible"
                 type="input"
                 name="content"
+                InputProps={{
+                    className: classes.content
+                }}
                 label="Message"
                 multiline
                 rowsMax={4}

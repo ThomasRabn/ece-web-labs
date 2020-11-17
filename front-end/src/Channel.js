@@ -120,10 +120,16 @@ export default () => {
             ...messages,
             message
         ])
-        let data = await axios.post('http://localhost:3001/channels/', channel);
-        let info = await axios.post('http://localhost:3001/channels/' + channel.name + '/messages', message);
-        console.log(data);
-        console.log(info);
+        let channelGet = await axios.get('http://localhost:3001/channels/');
+        let occurence = channelGet.data.find(arr => {
+            return arr.name === channel.name
+        })
+        console.log(occurence);
+        if(!occurence) {
+            // On rentre dedans uniquement si le channel n'existe pas
+            occurence = await axios.post('http://localhost:3001/channels/', channel);
+        }
+        let info = await axios.post('http://localhost:3001/channels/' + occurence.id + '/messages', message);
     }
     return (
         <div css={styles.channel}>
