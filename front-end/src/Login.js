@@ -9,8 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import Send from '@material-ui/icons/Send';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import LockIcon from '@material-ui/icons/Lock';
-
-
 // Layout
 import { useTheme } from '@material-ui/core/styles';
 
@@ -35,7 +33,19 @@ const useStyles = (theme) => ({
             },
         },
     },
-})
+    centered: {
+        marginBottom: 155,
+    },
+    welcomeTitle: {
+        fontSize: 50,
+        margin: 0,
+        fontWeight: '400',
+    },
+    loginTitle: {
+        fontStyle: 'italic',
+        fontWeight: '300',
+    }
+});
 
 export default ({
     onUser
@@ -43,10 +53,10 @@ export default ({
     const styles = useStyles(useTheme())
     return (
         <div css={styles.root}>
-            <div>
+            <div css={styles.centered}>
                 <div style={{textAlign: 'center'}}>
-                    <h1>Welcome</h1>
-                    <h3>Please log in</h3>
+                    <h1 css={styles.welcomeTitle}>Welcome</h1>
+                    <h2 css={styles.loginTitle}>Please log in</h2>
                 </div>
 
                 

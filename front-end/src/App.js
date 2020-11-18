@@ -22,13 +22,23 @@ const styles = {
 
 export default () => {
     const [user, setUser] = useState(null)
-    return (
-        <div className="App" css={styles.root}>
-            <Header />
-            {
-                user ? <Main /> : <Login onUser={setUser} />
-            }
-            <Footer />
-        </div>
-    );
+    const display = (e) => {
+        if(user) {
+            return (
+                <div className="App" css={styles.root}>
+                    <Header />
+                    <Main />
+                    <Footer />
+                </div>
+            )
+        } else {
+            return (
+                <div className="App" css={styles.root}>
+                    <Login onUser={setUser}/>
+                    <Footer />
+                </div>
+            )
+        }
+    }
+    return display();
 }
