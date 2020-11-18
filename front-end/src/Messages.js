@@ -67,7 +67,7 @@ export default ({
 
     const emptyScreen = (e) => {
         return (
-            <h1 css={styles.marged}>There is no message in this channel</h1>
+            <h2 css={styles.marged}>There is no message in this channel</h2>
         )
     }
     return (

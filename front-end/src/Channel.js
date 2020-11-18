@@ -62,7 +62,6 @@ export default ({
         let occurence = channelGet.data.find(arr => {
             return arr.name === channel.name
         })
-        console.log(occurence);
         if(!occurence) {
             // On rentre dedans uniquement si le channel n'existe pas
             occurence = await axios.post('http://localhost:3001/channels/', channel);
