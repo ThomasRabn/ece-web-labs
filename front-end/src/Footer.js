@@ -16,6 +16,7 @@ const useStyles = (theme) => ({
     centerInner: {
         textAlign: 'center',
         fontWeight: '400',
+        marginTop: 5,
     }
 });
 
