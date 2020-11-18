@@ -2,7 +2,6 @@
 import { jsx } from '@emotion/core';
 import { useTheme } from '@material-ui/core/styles';
 
-
 const useStyles = (theme) => ({
     footer: {
         height: '30px',
@@ -25,7 +24,7 @@ export default () => {
     return (
         <footer className="App-footer" style={styles.footer}>
             <div css={styles.centerOuter}>
-                <div css={styles.centerInner}>Copyright © 2020 <a css={{fontStyle: 'italic'}}>Thomas&Thomas</a>. All rights reserved.</div>
+                <div css={styles.centerInner}>Copyright © 2020  <i>Thomas&Thomas</i>. All rights reserved.</div>
             </div>
         </footer>
     );
