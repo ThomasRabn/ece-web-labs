@@ -15,7 +15,9 @@ const styles = {
     }
 }
 
-export default () => {
+export default ({
+    onChannel
+}) => {
     const [channels, setChannels] = useState([]);
 
     useEffect(() => {
@@ -24,7 +26,6 @@ export default () => {
             data = data.sort((a, b) => {
                 return a.name < b.name ? -1 : 1;
             })
-            console.log(data);
             setChannels(data);
         }
         fetchData();
@@ -34,7 +35,14 @@ export default () => {
             <ul>
                 {channels.map((channel, i) => (
                     <li key={i}>
-                        <a css={styles.textChannel} href={'http://localhost:3000/' + channel.id}>{channel.name}</a>
+                        <a css={styles.textChannel}  
+                        onClick={ (e) => {
+                            e.preventDefault();
+                            onChannel(channel);
+                        }} 
+                        href={'http://localhost:3000/' + channel.id}>
+                            {channel.name}
+                        </a>
                     </li>
                 ))}
             </ul>
