@@ -6,6 +6,7 @@ const axios = require('axios');
 
 const styles = {
     channels: {
+        backgroundColor: '#303030',
         minWidth: '200px'
     },
     textChannel: {

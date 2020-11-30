@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import {useState } from 'react';
+import { useState } from 'react';
 
 import Channel from './Channel.js';
 import Channels from './Channels.js';
@@ -9,7 +9,7 @@ import Welcome from './Welcome';
 
 const styles = {
     main: {
-        backgroundColor: '#373B44',
+        backgroundColor: '#303030',
         flex: '1 1 auto',
         display: 'flex',
         flexDirection: 'row',
