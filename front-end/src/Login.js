@@ -16,7 +16,7 @@ const useStyles = (theme) => ({
     root: {
         flex: '1 1 auto',
         background: theme.palette.background.default,
-        color: 'black',
+        color: 'rgb(220,220,220)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
