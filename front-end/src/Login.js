@@ -102,22 +102,21 @@ export default ({
                 <div style={{textAlign: 'center'}}>
                     <h1 css={styles.welcomeTitle}>Welcome</h1>
                     <h2 css={styles.loginTitle}>Please log in</h2>
-                    <a href={linkToLogin.url} style={{textDecoration: 'none'}}>
-                        <Button
-                                // style={{marginLeft: "auto"}}
-                                type="input"
-                                variant="contained"
-                                color="secondary"
-                                endIcon={<AccountCircle/>}
-                                // onClick={(e) => {
-                                //     e.stopPropagation();
-                                //     onRegister();
-                                //     //     //onUser({ username: 'david'})
-                                // }}
-                            >
-                                Login
-                        </Button>       
-                    </a>
+                    <Button
+                            // style={{marginLeft: "auto"}}
+                            type="input"
+                            variant="contained"
+                            color="secondary"
+                            endIcon={<AccountCircle/>}
+                            href={linkToLogin.url}
+                            // onClick={(e) => {
+                            //     e.stopPropagation();
+                            //     onRegister();
+                            //     //     //onUser({ username: 'david'})
+                            // }}
+                        >
+                            Login
+                    </Button> 
                 </div>
 
                 {/* <fieldset>
