@@ -81,6 +81,7 @@ const Redirect = () => {
                 +"&code_challenge_method=S256";
         window.location = url;
     }
+    
     return (
         <div css={styles.root}>
             <div css={styles.centered}>
@@ -204,7 +205,7 @@ export default ({
 
         }
     } else {
-        
+        console.log(code);
     }
 
     return (
