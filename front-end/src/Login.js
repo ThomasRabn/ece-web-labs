@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 import { useCookies} from 'react-cookie';
-import { useEffects } from 'react';
+import { useContext, useEffects } from 'react';
 // Core
 import Button from '@material-ui/core/Button';
 // Icons 
@@ -11,6 +11,7 @@ import axios from 'axios';
 import crypto from 'crypto';
 // Layout
 import { useTheme } from '@material-ui/core/styles';
+import { Context } from './Context';
 
 const useStyles = (theme) => ({
     root: {
@@ -62,14 +63,19 @@ const sha256 = (buffer) => {
         .digest();
 }
 
-const Redirect = ({
-    config,
-    codeVerifier
-}) => {
+const Redirect = () => {
+    const config = {
+        authorization_endpoint: 'http://127.0.0.1:5556/dex/auth',
+        client_id: 'example-app',
+        redirect_uri: 'http://127.0.0.1:3000',
+        scope: 'openid%20email%20offline_access',
+    }
+    const [cookies, setCookie, removeCookie] = useCookies();
+    const code_verifier = base64URLEncode(crypto.randomBytes(32));
     const styles = useStyles(useTheme());
-    const redirect = (e) => {
-        e.stopPropagation();
-        const code_challenge = base64URLEncode(sha256(codeVerifier));
+    const redirect = () => {
+        const code_challenge = base64URLEncode(sha256(code_verifier));
+        setCookie('code_verifier', code_verifier);
         const url = config.authorization_endpoint+"?client_id="+config.client_id+"&scope="+config.scope
                 +"&response_type=code&redirect_uri="+config.redirect_uri+"&code_challenge="+code_challenge
                 +"&code_challenge_method=S256";
@@ -82,12 +88,11 @@ const Redirect = ({
                     <h1 css={styles.welcomeTitle}>Welcome</h1>
                     <h2 css={styles.loginTitle}>Please log in</h2>
                     <Button
-                            // style={{marginLeft: "auto"}}
                             type="input"
                             variant="contained"
                             color="secondary"
                             endIcon={<AccountCircle/>}
-                            onClick= { redirect() }
+                            onClick={redirect}
                         >
                             Login
                     </Button> 
@@ -141,20 +146,29 @@ const Redirect = ({
 }
 
 
-// const handler = () => {
-    
-//     const code_verifier = base64URLEncode(crypto.randomBytes(32));
-//     console.log(code_verifier);
-//     const code_challenge = base64URLEncode(sha256(code_verifier));
-    
-//     const data = {
-//         code_verifier: code_verifier,
-//         url: url
-//     }
-//     console.log(JSON.stringify(data, null, 2)); 
-//     console.log('\n\n');
-//     return data;
-// }
+
+const CodeGrant = ({
+    params: {
+        client_id, token_endpoint,
+        redirect_uri, code_verifier, code
+    }
+}) => {
+    const codeGrant = async () => {
+        try {
+            const data = await(axios.post(token_endpoint, qs.stringify({
+                grant_type: 'authorization_code',
+                client_id: client_id,
+                redirect_uri:  redirect_uri,
+                code_verifier: code_verifier,
+                code: code
+            }))).data;
+            console.log(JSON.stringify(data, null, 2));
+            return data;
+        } catch (err) {
+            console.log(JSON.stringify(err.response.data, null, 2));
+        }
+    }
+}
 
 // const Token = ({
 //     oauth
@@ -177,24 +191,18 @@ export default ({
     onUser
 }) => {
     const styles = useStyles(useTheme());
-
-    const config = {
-        authorization_endpoint: 'http://127.0.0.1:5556/dex/auth',
-        client_id: 'example-app',
-        redirect_uri: 'http://127.0.0.1:5555/callback',
-        scope: 'openid%20email%20offline_access',
-    }
-    const code_verifier = base64URLEncode(crypto.randomBytes(32));
+    const { oauth, setOauth } = useContext(Context);
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     
     if(!code) { // We are not redirected from an Oauth server 
-        // if(!cookies.oauth) { // If the user is not connected
-        //     Redirect(config, code_verifier);
-        // } else {
-        //     // The user is connected, great!
-        // }
+        if(!oauth) { // If the user is not connected
+            return Redirect();
+        } else {
+            // The user is connected, great!
+
+        }
     } else {
         
     }
