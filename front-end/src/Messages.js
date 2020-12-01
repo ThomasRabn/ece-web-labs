@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { useRef, useEffect } from 'react';
-const { DateTime } = require("luxon");
+// const { DateTime } = require("luxon");
 
 const styles = {
     messages: {
@@ -34,7 +34,7 @@ export default ({
     messages,
     channel
 }) => {
-    const styleDate = {weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'}
+    // const styleDate = {weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit'}
     const messagesEndRef = useRef(null);
     const scrollToBottom = () => {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });

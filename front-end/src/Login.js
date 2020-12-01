@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 import { useCookies} from 'react-cookie';
-import { useContext, useEffects } from 'react';
+import { useContext/*, useEffects*/ } from 'react';
 // Core
 import Button from '@material-ui/core/Button';
 // Icons 
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import qs from 'qs';
-import axios from 'axios';
+// import qs from 'qs';
+// import axios from 'axios';
 import crypto from 'crypto';
 // Layout
 import { useTheme } from '@material-ui/core/styles';
@@ -70,7 +70,7 @@ const Redirect = () => {
         redirect_uri: 'http://127.0.0.1:3000',
         scope: 'openid%20email%20offline_access',
     }
-    const [cookies, setCookie, removeCookie] = useCookies();
+    const [, setCookie, ] = useCookies();
     const code_verifier = base64URLEncode(crypto.randomBytes(32));
     const styles = useStyles(useTheme());
     const redirect = () => {
@@ -147,28 +147,28 @@ const Redirect = () => {
 
 
 
-const CodeGrant = ({
-    params: {
-        client_id, token_endpoint,
-        redirect_uri, code_verifier, code
-    }
-}) => {
-    const codeGrant = async () => {
-        try {
-            const data = await(axios.post(token_endpoint, qs.stringify({
-                grant_type: 'authorization_code',
-                client_id: client_id,
-                redirect_uri:  redirect_uri,
-                code_verifier: code_verifier,
-                code: code
-            }))).data;
-            console.log(JSON.stringify(data, null, 2));
-            return data;
-        } catch (err) {
-            console.log(JSON.stringify(err.response.data, null, 2));
-        }
-    }
-}
+// const CodeGrant = ({
+//     params: {
+//         client_id, token_endpoint,
+//         redirect_uri, code_verifier, code
+//     }
+// }) => {
+//     const codeGrant = async () => {
+//         try {
+//             const data = await(axios.post(token_endpoint, qs.stringify({
+//                 grant_type: 'authorization_code',
+//                 client_id: client_id,
+//                 redirect_uri:  redirect_uri,
+//                 code_verifier: code_verifier,
+//                 code: code
+//             }))).data;
+//             console.log(JSON.stringify(data, null, 2));
+//             return data;
+//         } catch (err) {
+//             console.log(JSON.stringify(err.response.data, null, 2));
+//         }
+//     }
+// }
 
 // const Token = ({
 //     oauth
@@ -191,7 +191,7 @@ export default ({
     onUser
 }) => {
     const styles = useStyles(useTheme());
-    const { oauth, setOauth } = useContext(Context);
+    const { oauth/*, setOauth*/ } = useContext(Context);
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');

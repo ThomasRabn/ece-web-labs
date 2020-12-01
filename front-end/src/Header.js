@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { useContext } from 'react';
-import { Context } from './Context';
+// import { useContext } from 'react';
+// import { Context } from './Context';
 
 const styles = {
     header: {
