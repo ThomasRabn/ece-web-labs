@@ -11,7 +11,7 @@ describe('channels', () => {
   
   describe( 'list', () => {
   
-    it('list empty', async () => {
+    it.skip('list empty', async () => {
       // Return an empty channel list by default
       const {body: channels} = await supertest(app)
       .get('/channels')
@@ -19,7 +19,7 @@ describe('channels', () => {
       channels.should.eql([])
     })
     
-    it('list one element', async () => {
+    it.skip('list one element', async () => {
       // Create a channel
       await supertest(app)
       .post('/channels')
@@ -33,10 +33,10 @@ describe('channels', () => {
         name: 'channel 1'
       }])
     })
-    
+
   })
   
-  it('create one element', async () => {
+  it.skip('create one element', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
@@ -64,5 +64,5 @@ describe('channels', () => {
     .expect(200)
     channel.name.should.eql('channel 1')
   })
-  
+
 })
