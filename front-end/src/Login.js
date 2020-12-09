@@ -1,230 +1,184 @@
+import { useContext, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import crypto from 'crypto'
+import qs from 'qs'
+import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-import { useCookies} from 'react-cookie';
-import { useContext/*, useEffects*/ } from 'react';
-// Core
+// Layout
+import { useTheme } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button';
 // Icons 
 import AccountCircle from '@material-ui/icons/AccountCircle';
-// import qs from 'qs';
-// import axios from 'axios';
-import crypto from 'crypto';
-// Layout
-import { useTheme } from '@material-ui/core/styles';
-import { Context } from './Context';
-
-const useStyles = (theme) => ({
-    root: {
-        flex: '1 1 auto',
-        background: theme.palette.background.default,
-        color: 'rgb(220,220,220)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        '& > div': {
-            margin: `${theme.spacing(1)}`,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
-        '& fieldset': {
-            border: 'none',
-            '& label': {
-                marginBottom: theme.spacing(.5),
-                display: 'block',
-            },
-        },
-    },
-    centered: {
-        marginBottom: 155,
-    },
-    welcomeTitle: {
-        fontSize: 50,
-        margin: 0,
-        fontWeight: '400',
-    },
-    loginTitle: {
-        fontStyle: 'italic',
-        fontWeight: '300',
-    }
-});
-
+// Local
+import Context from './Context'
+import { useHistory } from "react-router-dom";
 
 const base64URLEncode = (str) => {
-    return str.toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=/g, '');
+  return str.toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
 }
 
 const sha256 = (buffer) => {
-    return crypto
-        .createHash('sha256')
-        .update(buffer)
-        .digest();
+  return crypto
+    .createHash('sha256')
+    .update(buffer)
+    .digest()
 }
 
-const Redirect = () => {
-    const config = {
-        authorization_endpoint: 'http://127.0.0.1:5556/dex/auth',
-        client_id: 'example-app',
-        redirect_uri: 'http://127.0.0.1:3000',
-        scope: 'openid%20email%20offline_access',
-    }
-    const [, setCookie, ] = useCookies();
-    const code_verifier = base64URLEncode(crypto.randomBytes(32));
-    const styles = useStyles(useTheme());
-    const redirect = () => {
-        const code_challenge = base64URLEncode(sha256(code_verifier));
-        setCookie('code_verifier', code_verifier);
-        const url = config.authorization_endpoint+"?client_id="+config.client_id+"&scope="+config.scope
-                +"&response_type=code&redirect_uri="+config.redirect_uri+"&code_challenge="+code_challenge
-                +"&code_challenge_method=S256";
-        window.location = url;
-    }
-    
-    return (
-        <div css={styles.root}>
-            <div css={styles.centered}>
-                <div style={{textAlign: 'center'}}>
-                    <h1 css={styles.welcomeTitle}>Welcome</h1>
-                    <h2 css={styles.loginTitle}>Please log in</h2>
-                    <Button
-                            type="input"
-                            variant="contained"
-                            color="secondary"
-                            endIcon={<AccountCircle/>}
-                            onClick={redirect}
-                        >
-                            Login
-                    </Button> 
-                    {/* <fieldset>
-                    <Grid container spacing={1} alignItems="flex-end">
-                        <Grid item>
-                            <AccountCircle />
-                        </Grid>
-                        <Grid item>
-                            <TextField id="username" name="username" label="Username" />
-                        </Grid>
-                    </Grid>
-                </fieldset>
-                <fieldset>
-                    <Grid container spacing={1} alignItems="flex-end">
-                        <Grid item>
-                            <LockIcon />
-                        </Grid>
-                        <Grid item>
-                            <TextField
-                                id="password"
-                                name="password"
-                                label="Password"
-                                type="password"
-                                autoComplete="current-password"
-                                css={styles.root}
-                            />
-                        </Grid>
-                    </Grid>
-                    
-                </fieldset>
-                <fieldset style={{display: "flex"}}>
-                    <Button
-                        style={{marginLeft: "auto"}}
-                        type="input"
-                        variant="contained"
-                        color="secondary"
-                        endIcon={<Send/>}
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            onUser({ username: 'david' })
-                        }}
-                    >
-                        Send
-                    </Button>
-                </fieldset> */}
-                </div>
-            </div>
+const useStyles = (theme) => ({
+  root: {
+      flex: '1 1 auto',
+      background: theme.palette.background.default,
+      color: 'rgb(220,220,220)',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      '& > div': {
+          margin: `${theme.spacing(1)}`,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+      },
+      '& fieldset': {
+          border: 'none',
+          '& label': {
+              marginBottom: theme.spacing(.5),
+              display: 'block',
+          },
+      },
+  },
+  centered: {
+      marginBottom: 155,
+  },
+  welcomeTitle: {
+      fontSize: 50,
+      margin: 0,
+      fontWeight: '400',
+  },
+  loginTitle: {
+      fontStyle: 'italic',
+      fontWeight: '300',
+  }
+});
+
+const Redirect = ({
+  config,
+  codeVerifier,
+}) => {
+  const styles = useStyles(useTheme())
+  const redirect = (e) => {
+    e.stopPropagation()
+    const code_challenge = base64URLEncode(sha256(codeVerifier))
+    const url = [
+      `${config.authorization_endpoint}?`,
+      `client_id=${config.client_id}&`,
+      `scope=${config.scope}&`,
+      `response_type=code&`,
+      `redirect_uri=${config.redirect_uri}&`,
+      `code_challenge=${code_challenge}&`,
+      `code_challenge_method=S256`,
+    ].join('')
+    window.location = url
+  }
+  return (
+    <div css={styles.root}>
+      <div css={styles.centered}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 css={styles.welcomeTitle}>Welcome</h1>
+          <h2 css={styles.loginTitle}>Please log in</h2>
+          <Button
+            type="input"
+            variant="contained"
+            color="secondary"
+            endIcon={<AccountCircle />}
+            onClick={redirect}
+          >
+            Login
+          </Button>
         </div>
-    )
+      </div>
+    </div>
+  )
 }
 
-
-
-// const CodeGrant = ({
-//     params: {
-//         client_id, token_endpoint,
-//         redirect_uri, code_verifier, code
-//     }
-// }) => {
-//     const codeGrant = async () => {
-//         try {
-//             const data = await(axios.post(token_endpoint, qs.stringify({
-//                 grant_type: 'authorization_code',
-//                 client_id: client_id,
-//                 redirect_uri:  redirect_uri,
-//                 code_verifier: code_verifier,
-//                 code: code
-//             }))).data;
-//             console.log(JSON.stringify(data, null, 2));
-//             return data;
-//         } catch (err) {
-//             console.log(JSON.stringify(err.response.data, null, 2));
-//         }
-//     }
-// }
-
-// const Token = ({
-//     oauth
-// }) => {
-//     const [,, removeCookie] = useCookies([]);
-//     const styles = useStyles(useTheme());
-//     const logout = (e) => { 
-//         e.stopPropagation();
-//         removeCookie('oauth');
-//     }
-//     return (
-//         <div css={styles.root}>
-//             Welcome {email} {/*<Link onClick={logout} color='secondary'>Logout</Link> */}
-//         </div>
-//     )
-// }
-
+const Tokens = ({
+  oauth
+}) => {
+  const {setOauth} = useContext(Context)
+  const styles = useStyles(useTheme())
+  const {id_token} = oauth
+  const id_payload = id_token.split('.')[1]
+  const {email} = JSON.parse(atob(id_payload))
+  const logout = (e) => {
+    e.stopPropagation()
+    setOauth(null)
+  }
+  return (
+    <div css={styles.root}>
+      Welcome {email} <Link onClick={logout} color="secondary">logout</Link>
+    </div>
+  )
+}
 
 export default ({
-    onUser
+  onUser
 }) => {
-    const styles = useStyles(useTheme());
-    const { oauth/*, setOauth*/ } = useContext(Context);
-
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    
-    if(!code) { // We are not redirected from an Oauth server 
-        if(!oauth) { // If the user is not connected
-            return Redirect();
-        } else {
-            // The user is connected, great!
-
-        }
-    } else {
-        console.log(code);
+  const styles = useStyles(useTheme())
+  const history = useHistory();
+  // const location = useLocation();
+  const [cookies, setCookie, removeCookie] = useCookies([]);
+  const {oauth, setOauth} = useContext(Context)
+  const config = {
+    authorization_endpoint: 'http://127.0.0.1:5556/dex/auth',
+    token_endpoint: 'http://127.0.0.1:5556/dex/token',
+    client_id: 'webtech-frontend',
+    redirect_uri: 'http://127.0.0.1:3000',
+    scope: 'openid%20email%20offline_access',
+  }
+  const params = new URLSearchParams(window.location.search)
+  const code = params.get('code')
+  // is there a code query parameters in the url 
+  if(!code){ // no: we are not being redirected from an oauth server
+    if(!oauth){
+      const codeVerifier = base64URLEncode(crypto.randomBytes(32))
+      setCookie('code_verifier', codeVerifier)
+      return (
+        <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
+      )
+    }else{ // yes: user is already logged in, great, is is working
+      return (
+        <Tokens oauth={oauth} css={styles.root} />
+      )
     }
-
+  }else{ // yes: we are coming from an oauth server
+    const codeVerifier = cookies.code_verifier
+    useEffect( () => {
+      const fetch = async () => {
+        try {
+          const {data} = await axios.post(
+            config.token_endpoint
+          , qs.stringify ({
+            grant_type: 'authorization_code',
+            client_id: `${config.client_id}`,
+            code_verifier: `${codeVerifier}`,
+            redirect_uri: `${config.redirect_uri}`,
+            code: `${code}`,
+          }))
+          removeCookie('code_verifier')
+          setOauth(data)
+          // window.location = '/'
+          history.push('/')
+        }catch (err) {
+          console.error(err)
+        }
+      }
+      fetch()
+    })
     return (
-        <div css={styles.root}>
-            <div css={styles.centered}>
-                <div style={{textAlign: 'center'}}>
-                    <h1 css={styles.welcomeTitle}>Welcome</h1>
-                    <h2 css={styles.loginTitle}>Please log in</h2>
-                    <Button
-                            // style={{marginLeft: "auto"}}
-                            type="input"
-                            variant="contained"
-                            color="secondary"
-                            endIcon={<AccountCircle/>}
-                        >
-                            Login
-                    </Button> 
-                </div>
-            </div>
-        </div>
-    );
+      <div css={styles.root}>Loading tokens</div>
+    )
+  }
 }

@@ -2,10 +2,15 @@
 const db = require('./db')
 const express = require('express')
 const cors = require('cors')
+const authenticator = require('./authenticator')
+
 const app = express()
+const authenticate = authenticator({
+  jwks_uri: 'http://127.0.0.1:5556/dex/keys'
+})
 
 app.use(require('body-parser').json())
-app.use(cors());
+app.use(cors())
 
 app.get('/', (req, res) => {
   res.send([
@@ -15,7 +20,7 @@ app.get('/', (req, res) => {
 
 // Channels
 
-app.get('/channels', async (req, res) => {
+app.get('/channels', authenticate, async (req, res) => {
   const channels = await db.channels.list()
   res.json(channels)
 })

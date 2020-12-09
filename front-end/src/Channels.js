@@ -1,52 +1,59 @@
+import {useContext, useEffect} from 'react';
+import axios from 'axios';
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
-import { useEffect, useState } from 'react';
-const axios = require('axios');
-
+import { jsx } from '@emotion/core'
+// Layout
+import Link from '@material-ui/core/Link'
+// Local
+import Context from './Context'
+import {useHistory} from 'react-router-dom'
 
 const styles = {
-    channels: {
-        backgroundColor: '#303030',
-        minWidth: '200px'
-    },
-    textChannel: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: '1.2em'
-    }
+  // root: {
+  //   minWidth: '200px',
+  // },
+  channel: {
+    padding: '.2rem .5rem',
+    whiteSpace: 'nowrap', 
+  }
 }
 
-export default ({
-    onChannel
-}) => {
-    const [channels, setChannels] = useState([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            let { data } = await axios.get('http://localhost:3001/channels');
-            data = data.sort((a, b) => {
-                return a.name < b.name ? -1 : 1;
-            })
-            setChannels(data);
-        }
-        fetchData();
-    }, []);
-    return (
-        <div css={styles.channels}>
-            <ul>
-                {channels.map((channel, i) => (
-                    <li key={i}>
-                        <a css={styles.textChannel}  
-                        onClick={ (e) => {
-                            e.preventDefault();
-                            onChannel(channel);
-                        }} 
-                        href={'http://localhost:3000/' + channel.id}>
-                            {channel.name}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+export default () => {
+  const {
+    oauth,
+    channels, setChannels
+  } = useContext(Context)
+  const history = useHistory();
+  useEffect( () => {
+    const fetch = async () => {
+      try{
+        const {data: channels} = await axios.get('http://localhost:3001/channels', {
+          headers: {
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        setChannels(channels)
+      }catch(err){
+        console.error(err)
+      }
+    }
+    fetch()
+  }, [oauth, setChannels])
+  return (
+    <ul style={styles.root}>
+      { channels.map( (channel, i) => (
+        <li key={i} css={styles.channel}>
+          <Link
+            href={`/channels/${channel.id}`}
+            onClick={ (e) => {
+              e.preventDefault()
+              history.push(`/channels/${channel.id}`)
+            }}
+          >
+            {channel.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
 }

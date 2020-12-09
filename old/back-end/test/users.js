@@ -14,7 +14,7 @@ describe('users', () => {
     const {body: users} = await supertest(app)
     .get('/users')
     .expect(200)
-    users.should.match([])
+    users.should.eql([])
   })
   
   it('list one element', async () => {
@@ -27,7 +27,7 @@ describe('users', () => {
     .get('/users')
     .expect(200)
     users.should.match([{
-      id: /^users:\w+-\w+-\w+-\w+-\w+$/,
+      id: /^\w+-\w+-\w+-\w+-\w+$/,
       username: 'user_1'
     }])
   })
@@ -43,6 +43,18 @@ describe('users', () => {
     const {body: users} = await supertest(app)
     .get('/users')
     users.length.should.eql(1)
+  })
+  
+  it('get user', async () => {
+    // Create a user
+    const {body: user1} = await supertest(app)
+    .post('/users')
+    .send({username: 'user_1'})
+    // Check it was correctly inserted
+    const {body: user} = await supertest(app)
+    .get(`/users/${user1.id}`)
+    .expect(200)
+    user.username.should.eql('user_1')
   })
   
 })

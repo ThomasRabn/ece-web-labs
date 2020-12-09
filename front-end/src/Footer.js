@@ -7,7 +7,6 @@ const useStyles = (theme) => ({
         height: '30px',
         backgroundColor: theme.palette.background.default,
         flexShrink: 0,
-        color: 'grey',
     },
     centerOuter: {
         marginLeft: 'auto',

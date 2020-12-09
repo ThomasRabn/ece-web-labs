@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom';
 import { CookiesProvider } from 'react-cookie';
 import './index.css';
 import App from './App';
+import { Provider as ContextProvider } from './Context';
 import * as serviceWorker from './serviceWorker';
+import 'typeface-roboto'
+// Layout
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import ContextProvider from './Context';
-// import { dark } from '@material-ui/core/styles/createPalette';
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
 
 const theme = createMuiTheme({
   palette: {
@@ -19,7 +23,9 @@ ReactDOM.render(
     <ContextProvider>
       <CookiesProvider>
         <ThemeProvider theme={theme}>
-          <App />
+          <Router>
+            <App />
+          </Router>
         </ThemeProvider>
       </CookiesProvider>
     </ContextProvider>
