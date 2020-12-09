@@ -65,7 +65,7 @@ export default ({
             <div css={styles.toRight}>
               <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 endIcon={<ExitToAppIcon />}
                 onClick={onClickLogout}
               >

@@ -1,12 +1,14 @@
 import {useContext, useEffect} from 'react'
 import axios from 'axios'
+import {useHistory} from 'react-router-dom'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
 import Link from '@material-ui/core/Link'
 // Local
 import Context from './Context'
-import {useHistory} from 'react-router-dom'
+import CreateChannel from './CreateChannel'
+import 'reactjs-popup/dist/index.css';
 
 const styles = {
   channels: {
@@ -63,17 +65,8 @@ export default () => {
           </Link>
         </li>
       ))}
-      <li key='58778998525205zfzzgzgzeg20' css={styles.channel}>
-        <Link
-          href={`/channels/creation`}
-          onClick={ (e) => {
-            e.preventDefault()
-            history.push(`/channels/creation`)
-          }}
-          style={{color: 'white'}}
-        >
-          Add a channel
-        </Link>
+      <li css={styles.channel}>
+        <CreateChannel/>
       </li>
     </ul>
   );

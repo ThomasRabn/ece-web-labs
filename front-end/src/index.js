@@ -7,7 +7,7 @@ import { Provider as ContextProvider } from './Context';
 import * as serviceWorker from './serviceWorker';
 import 'typeface-roboto'
 // Layout
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, withTheme } from '@material-ui/core/styles';
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
@@ -15,6 +15,18 @@ import {
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
+    primary: {
+      light: '#3f50b5',
+      main: '#fff',
+      dark: '#002884',
+      contrastText: '#000',
+    },
+    secondary: {
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
   }
 });
 

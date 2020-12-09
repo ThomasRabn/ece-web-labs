@@ -54,20 +54,6 @@ export default () => {
             )
           }
         </Route>
-        <Route path="/channels/creation">
-          {
-            oauth ? (
-              <CreateChannel/>
-            ) : (
-              <Redirect
-                to={{
-                  pathname: "/",
-                  state: { from: location }
-                }}
-              />
-            )
-          }
-        </Route>
         <Route path="/channels">
           {
             oauth ? (
