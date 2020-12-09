@@ -63,6 +63,18 @@ export default () => {
           </Link>
         </li>
       ))}
+      <li key='58778998525205zfzzgzgzeg20' css={styles.channel}>
+        <Link
+          href={`/channels/creation`}
+          onClick={ (e) => {
+            e.preventDefault()
+            history.push(`/channels/creation`)
+          }}
+          style={{color: 'white'}}
+        >
+          Add a channel
+        </Link>
+      </li>
     </ul>
   );
 }

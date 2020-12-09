@@ -9,6 +9,7 @@ import Header from './Header'
 import Main from './Main'
 import Login from './Login'
 import Context from './Context'
+import CreateChannel from './CreateChannel'
 // Rooter
 import {
   Switch,
@@ -50,6 +51,20 @@ export default () => {
               />
             ) : (
               <Login />
+            )
+          }
+        </Route>
+        <Route path="/channels/creation">
+          {
+            oauth ? (
+              <CreateChannel/>
+            ) : (
+              <Redirect
+                to={{
+                  pathname: "/",
+                  state: { from: location }
+                }}
+              />
             )
           }
         </Route>

@@ -20,6 +20,9 @@ dayjs.updateLocale('en', {
   }
 })
 
+var { DateTime } = require('luxon');
+
+
 const useStyles = (theme) => ({
   root: {
     position: 'relative',
@@ -52,6 +55,9 @@ const useStyles = (theme) => ({
     top: 0,
     width: '50px',
   },
+  marged: {
+    marginLeft: 20,
+  }
 })
 
 export default forwardRef(({
@@ -60,6 +66,7 @@ export default forwardRef(({
   onScrollDown,
 }, ref) => {
   const styles = useStyles(useTheme())
+  const styleDate = {weekday: 'long', day: 'numeric', month: 'long',  year: 'numeric', hour: 'numeric', minute: '2-digit'}
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
     scroll: scroll
@@ -86,29 +93,39 @@ export default forwardRef(({
     rootNode.addEventListener('scroll', handleScroll)
     return () => rootNode.removeEventListener('scroll', handleScroll)
   })
+  const printMessages = (e) => {
+    return (
+      <ul>
+      { messages.map((message, i) => (
+        // const {contents: content} = unified()
+            //   .use(markdown)
+            //   .use(remark2rehype)
+            //   .use(html)
+            //   .processSync(message.content)
+            // <span>{dayjs().calendar(message.creation)}</span>
+        <li key={i} css={styles.message} >
+          <p>
+            <span>{message.author}</span>
+            {' - '}
+            {
+              <span>{(new DateTime.fromISO((new Date(message.creation/1000)).toISOString())).setLocale('en-GB').toLocaleString(styleDate)}</span>
+            }
+          </p>
+          <div dangerouslySetInnerHTML={{__html: message.content}}></div>
+        </li>
+      )) }
+      </ul>
+    );
+  }
+  const emptyScreen = (e) => {
+    return (
+      <h2 css={styles.marged}>There is no message in this channel</h2>
+    )
+  }
   return (
     <div css={styles.root} ref={rootEl}>
       <h1>Messages for {channel.name}</h1>
-      <ul>
-        { messages.map( (message, i) => {
-            const {contents: content} = unified()
-            .use(markdown)
-            .use(remark2rehype)
-            .use(html)
-            .processSync(message.content)
-            return (
-              <li key={i} css={styles.message}>
-                <p>
-                  <span>{message.author}</span>
-                  {' - '}
-                  <span>{dayjs().calendar(message.creation)}</span>
-                </p>
-                <div dangerouslySetInnerHTML={{__html: content}}>
-                </div>
-              </li>
-            )
-        })}
-      </ul>
+      { messages.length > 0 ? printMessages() : emptyScreen() }
       <div ref={scrollEl} />
     </div>
   )
