@@ -153,7 +153,7 @@ export default ({
         <Tokens oauth={oauth} css={styles.root} />
       )
     }
-  }else{ // yes: we are coming from an oauth server
+  } else { // yes: we are coming from an oauth server
     const codeVerifier = cookies.code_verifier
     useEffect( () => {
       const fetch = async () => {

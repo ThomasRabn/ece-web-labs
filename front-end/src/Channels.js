@@ -1,5 +1,5 @@
-import {useContext, useEffect} from 'react';
-import axios from 'axios';
+import {useContext, useEffect} from 'react'
+import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
@@ -9,12 +9,17 @@ import Context from './Context'
 import {useHistory} from 'react-router-dom'
 
 const styles = {
-  // root: {
-  //   minWidth: '200px',
-  // },
+  channels: {
+    paddingRight: '1em',
+    paddingLeft: '1em',
+    paddingTop: '1em'
+  },
   channel: {
     padding: '.2rem .5rem',
     whiteSpace: 'nowrap', 
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '1.2em'
   }
 }
 
@@ -27,10 +32,13 @@ export default () => {
   useEffect( () => {
     const fetch = async () => {
       try{
-        const {data: channels} = await axios.get('http://localhost:3001/channels', {
+        let {data: channels} = await axios.get('http://localhost:3001/channels', {
           headers: {
             'Authorization': `Bearer ${oauth.access_token}`
           }
+        })
+        channels = channels.sort((a, b) => {
+            return a.name < b.name ? -1 : 1;
         })
         setChannels(channels)
       }catch(err){
@@ -40,7 +48,7 @@ export default () => {
     fetch()
   }, [oauth, setChannels])
   return (
-    <ul style={styles.root}>
+    <ul style={styles.channels}>
       { channels.map( (channel, i) => (
         <li key={i} css={styles.channel}>
           <Link
@@ -49,6 +57,7 @@ export default () => {
               e.preventDefault()
               history.push(`/channels/${channel.id}`)
             }}
+            style={{color: 'white'}}
           >
             {channel.name}
           </Link>

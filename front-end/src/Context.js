@@ -26,7 +26,7 @@ export const Provider = ({
           )
           oauth.email = payload.email
           setCookie('oauth', oauth)
-        }else{
+        } else {
           setCurrentChannel(null)
           setChannels([])
           removeCookie('oauth')

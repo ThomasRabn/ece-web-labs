@@ -20,7 +20,6 @@ export default ({
     onChannel
 }) => {
     const [channels, setChannels] = useState([]);
-
     useEffect(() => {
         async function fetchData() {
             let { data } = await axios.get('http://localhost:3001/channels');
