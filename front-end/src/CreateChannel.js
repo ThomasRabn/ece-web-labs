@@ -1,20 +1,23 @@
+import { useState, useContext } from 'react'
+import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Core
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Grid from '@material-ui/core/Grid'
 // Icons 
-import Send from '@material-ui/icons/Send';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import LockIcon from '@material-ui/icons/Lock';
+import Send from '@material-ui/icons/Send'
 // Layout
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
 // Popup
-import Popup from 'reactjs-popup';
+import Popup from 'reactjs-popup'
+// Local
+import Context from './Context'
+import { useHistory } from 'react-router-dom'
 
-const styles = {
+const useStyles = (theme) => ({
   channels: {
     paddingRight: '1em',
     paddingLeft: '1em',
@@ -34,25 +37,71 @@ const styles = {
   },
   send: {
     marginRight: '300px'
-  }
-}
+  },
+  root: {
+    flex: '1 1 auto',
+    background: theme.palette.background.default,
+    color: 'rgb(220,220,220)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    '& > div': {
+      margin: `${theme.spacing(1)}`,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+    '& fieldset': {
+      border: 'none',
+      '& label': {
+        marginBottom: theme.spacing(.5),
+        display: 'block',
+      },
+    },
+  },
+  centered: {
+    marginBottom: 155,
+  },
+  welcomeTitle: {
+    fontSize: 50,
+    margin: 0,
+    fontWeight: '400',
+  },
+})
 
-export default () => {
+export default (props) => {
   const styles = useStyles(useTheme())
+  const history = useHistory()
+  const { oauth, channels, setChannels } = useContext(Context)
+  // Popup variables
   const contentStyle = { backgroundColor: useTheme().palette.background.default }
   const overlayStyle = { background: 'rgba(0,0,0,0.7)' }
-  // const onSubmit = () => {
-  //   close()
-  // }
+  const [name, setName] = useState('')
+  const onSubmit = async () => {
+    const {data: answer} = await axios.post(
+      `http://localhost:3001/channels/`,
+      {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        },
+        name: name,
+        owner: oauth.email,
+      })
+    setName('')
+    channels.push(answer)
+    setChannels(channels)
+    history.push(`/channels/${answer.id}`)
+  }
+  const handleChange = (e) => {
+    setName(e.target.value)
+  }
   return (
     <Popup
       trigger={
         <Link
           href={`#`}
           style={{color: 'white'}}
-
         >
-          Add a channel
+          {props.children}
         </Link>
       }
       modal
@@ -67,11 +116,11 @@ export default () => {
               <h1 css={styles.welcomeTitle}>Create a new channel</h1>
               <h3>Please enter its information</h3>
             </div>
-            <form css={styles.form} onClick={close} noValidate>
+            <form css={styles.form} noValidate>
               <fieldset>
                 <Grid container spacing={1} justify="center">
                   <Grid item>
-                    <TextField id="name" name="name" label="Channel name" variant="filled" />
+                    <TextField id="name" value={name} onChange={handleChange} name="name" label="Channel name" variant="filled" />
                   </Grid>
                 </Grid>
               </fieldset>
@@ -88,7 +137,7 @@ export default () => {
                   type="input"
                   variant="contained"
                   color="secondary"
-                  //onClick={onSubmit}
+                  onClick={ () => {close(); onSubmit()}}
                   endIcon={<Send />}
                 >
                   Send
@@ -101,86 +150,3 @@ export default () => {
     </Popup>
   )
 }
-
-const useStyles = (theme) => ({
-  root: {
-      flex: '1 1 auto',
-      background: theme.palette.background.default,
-      color: 'rgb(220,220,220)',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      '& > div': {
-          margin: `${theme.spacing(1)}`,
-          marginLeft: 'auto',
-          marginRight: 'auto',
-      },
-      '& fieldset': {
-          border: 'none',
-          '& label': {
-              marginBottom: theme.spacing(.5),
-              display: 'block',
-          },
-      },
-  },
-  centered: {
-      marginBottom: 155,
-  },
-  welcomeTitle: {
-      fontSize: 50,
-      margin: 0,
-      fontWeight: '400',
-  },
-});
-
-// export default () => {
-//   const styles = useStyles(useTheme())
-//   return (
-//     <div css={styles.root}>
-//       <div>
-//         <div style={{ textAlign: 'center' }}>
-//           <h1 css={styles.welcomeTitle}>Welcome</h1>
-//           <h3>Please log in</h3>
-//         </div>
-//         <fieldset>
-//           <Grid container spacing={1} alignItems="flex-end">
-//             <Grid item>
-//               <AccountCircle />
-//             </Grid>
-//             <Grid item>
-//               <TextField id="username" name="username" label="Username" />
-//             </Grid>
-//           </Grid>
-//         </fieldset>
-//         <fieldset>
-//           <Grid container spacing={1} alignItems="flex-end">
-//             <Grid item>
-//               <LockIcon />
-//             </Grid>
-//             <Grid item>
-//               <TextField
-//                 id="password"
-//                 name="password"
-//                 label="Password"
-//                 type="password"
-//                 autoComplete="current-password"
-//                 css={styles.root}
-//               />
-//             </Grid>
-//           </Grid>
-//         </fieldset>
-//         <fieldset style={{ display: "flex" }}>
-//           <Button
-//             style={{ marginLeft: "auto" }}
-//             type="input"
-//             variant="contained"
-//             color="secondary"
-//             endIcon={<Send />}
-//           >
-//             Send
-//           </Button>
-//         </fieldset>
-//       </div>
-//     </div>
-//   );
-// }

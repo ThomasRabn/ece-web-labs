@@ -124,7 +124,7 @@ export default forwardRef(({
   }
   return (
     <div css={styles.root} ref={rootEl}>
-      <h1>Messages for {channel.name}</h1>
+      <h1 css={styles.marged}>Messages for {channel.name}</h1>
       { messages.length > 0 ? printMessages() : emptyScreen() }
       <div ref={scrollEl} />
     </div>
