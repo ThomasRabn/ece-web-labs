@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import axios from 'axios';
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button"
 import SendIcon from "@material-ui/icons/Send";
 import TextField from '@material-ui/core/TextField';
 import { useTheme } from '@material-ui/core/styles';
+import Context from '../Context';
 
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -25,6 +26,7 @@ const useStyles = (theme) => {
       },
     },
     send: {
+      height: '100%'
     },
   }
 }
@@ -34,13 +36,16 @@ export default ({
   channel,
 }) => {
   const [content, setContent] = useState('')
+  const {
+    oauth
+  } = useContext(Context)
   const styles = useStyles(useTheme())
   const onSubmit = async () => {
     const {data: message} = await axios.post(
       `http://localhost:3001/channels/${channel.id}/messages`
     , {
       content: content,
-      author: 'david',
+      author: oauth.email,
     })
     addMessage(message)
     setContent('')
@@ -63,7 +68,7 @@ export default ({
       <div>
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           css={styles.send}
           endIcon={<SendIcon />}
           onClick={onSubmit}

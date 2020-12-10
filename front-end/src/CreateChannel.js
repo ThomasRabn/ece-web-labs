@@ -31,19 +31,26 @@ const styles = {
     background: '#fff',
     backgroundColor: '#fff',
     border: '1px solid #fff'
+  },
+  send: {
+    marginRight: '300px'
   }
 }
 
 export default () => {
   const styles = useStyles(useTheme())
-  const contentStyle = { background: useTheme().palette.background.default };
-  const overlayStyle = { background: 'rgba(0,0,0,0.7)' };
+  const contentStyle = { backgroundColor: useTheme().palette.background.default }
+  const overlayStyle = { background: 'rgba(0,0,0,0.7)' }
+  // const onSubmit = () => {
+  //   close()
+  // }
   return (
     <Popup
       trigger={
         <Link
           href={`#`}
           style={{color: 'white'}}
+
         >
           Add a channel
         </Link>
@@ -53,12 +60,14 @@ export default () => {
       contentStyle={contentStyle}
       overlayStyle={overlayStyle}
     >
-          <div css={styles.root}>
-            <div>
-              <div style={{ textAlign: 'center', margin: '0 0 0 0' }}>
-                <h1 css={styles.welcomeTitle}>Create a new channel</h1>
-                <h3>Please enter its information</h3>
-              </div>
+      {close => (
+        <div css={styles.root}>
+          <div>
+            <div style={{ textAlign: 'center', margin: '0 0 0 0' }}>
+              <h1 css={styles.welcomeTitle}>Create a new channel</h1>
+              <h3>Please enter its information</h3>
+            </div>
+            <form css={styles.form} onClick={close} noValidate>
               <fieldset>
                 <Grid container spacing={1} justify="center">
                   <Grid item>
@@ -75,17 +84,20 @@ export default () => {
               </fieldset>
               <fieldset style={{ display: "flex" }}>
                 <Button
-                  style={{ marginLeft: "auto" }}
+                  style={{ margin: "0 23% 0 auto" }}
                   type="input"
                   variant="contained"
                   color="secondary"
+                  //onClick={onSubmit}
                   endIcon={<Send />}
                 >
                   Send
                 </Button>
               </fieldset>
-            </div>
+            </form>
           </div>
+        </div>
+      )}
     </Popup>
   )
 }
