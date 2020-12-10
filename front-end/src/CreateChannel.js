@@ -62,7 +62,7 @@ const useStyles = (theme) => ({
     marginBottom: 155,
   },
   welcomeTitle: {
-    fontSize: 50,
+    fontSize: 40,
     margin: 0,
     fontWeight: '400',
   },
@@ -74,7 +74,7 @@ export default (props) => {
   const { oauth, channels, setChannels } = useContext(Context)
   // Popup variables
   const contentStyle = { backgroundColor: useTheme().palette.background.default }
-  const overlayStyle = { background: 'rgba(0,0,0,0.7)' }
+  const overlayStyle = { background: 'rgba(0,0,0,0.7)', zIndex: 1300 }
   const [name, setName] = useState('')
   const onSubmit = async () => {
     const {data: answer} = await axios.post(
@@ -133,7 +133,7 @@ export default (props) => {
               </fieldset>
               <fieldset style={{ display: "flex" }}>
                 <Button
-                  style={{ margin: "0 23% 0 auto" }}
+                  style={{ margin: "0 15% 0 auto" }}
                   type="input"
                   variant="contained"
                   color="secondary"

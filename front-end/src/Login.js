@@ -147,7 +147,7 @@ export default () => {
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
       )
-    }else{ // yes: user is already logged in, great, is is working
+    } else { // yes: user is already logged in, great, is is working
       return (
         <Tokens oauth={oauth} css={styles.root} />
       )
