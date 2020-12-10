@@ -2,12 +2,14 @@ import {} from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
-import { useTheme } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import {ReactComponent as ChannelIcon} from './icons/channel.svg';
-import {ReactComponent as FriendsIcon} from './icons/friends.svg';
-import {ReactComponent as SettingsIcon} from './icons/settings.svg';
+import { useTheme } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import {ReactComponent as ChannelIcon} from './icons/channel.svg'
+import {ReactComponent as FriendsIcon} from './icons/friends.svg'
+import {ReactComponent as SettingsIcon} from './icons/settings.svg'
+import CreateChannel from './CreateChannel'
+import InviteFriends from './InviteFriends';
 
 const useStyles = (theme) => ({
   root: {
@@ -37,18 +39,23 @@ export default () => {
       >
         <Grid item xs>
           <div css={styles.card}>
-            <ChannelIcon css={styles.icon} />
-            <Typography color="textPrimary">
-              Create channels
-            </Typography>
+            <CreateChannel>
+              <ChannelIcon css={styles.icon} />
+              <Typography color="textPrimary">
+                Create channels
+              </Typography>
+            </CreateChannel>
           </div>
         </Grid>
         <Grid item xs>
           <div css={styles.card}>
-            <FriendsIcon css={styles.icon} />
-            <Typography color="textPrimary">
-              Invite friends
-            </Typography>
+            <InviteFriends>
+              <FriendsIcon css={styles.icon} />
+              <Typography color="textPrimary">
+                Invite friends
+              </Typography>
+            </InviteFriends>
+            
           </div>
         </Grid>
         <Grid item xs>

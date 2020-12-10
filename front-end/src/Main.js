@@ -35,7 +35,6 @@ const useStyles = (theme) => ({
 
 export default () => {
   const {
-    currentChannel,
     drawerVisible,
   } = useContext(Context)
   const theme = useTheme()

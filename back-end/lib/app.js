@@ -36,7 +36,15 @@ app.get('/channels/:id', async (req, res) => {
 })
 
 app.put('/channels/:id', async (req, res) => {
-  const channel = await db.channels.update(req.body)
+  const channel = await db.channels.update(req.params.id, req.body)
+  res.json(channel)
+})
+
+app.put('/channels/:id/invite', async (req, res) => {
+  const channel = await db.channels.invite(req.params.id, req.body)
+  for(const elem of req.body.invitedUsers) {
+    await db.users.invite(elem.id, req.params.id)
+  }
   res.json(channel)
 })
 
@@ -57,6 +65,16 @@ app.post('/channels/:id/messages', async (req, res) => {
 app.get('/users', async (req, res) => {
   const users = await db.users.list()
   res.json(users)
+})
+
+app.get('/usernames', async (req, res) => {
+  if(!req.query.search) {
+    const users = await db.users.listNames()
+    res.json(users)
+  } else {
+    const users = await db.users.searchByName(req.query.search)
+    res.json(users)
+  }
 })
 
 app.post('/users', async (req, res) => {

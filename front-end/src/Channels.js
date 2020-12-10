@@ -40,8 +40,9 @@ export default () => {
           }
         })
         channels = channels.sort((a, b) => {
-            return a.name < b.name ? -1 : 1;
+          return a.name < b.name ? -1 : 1;
         })
+        console.log(channels)
         setChannels(channels)
       }catch(err){
         console.error(err)
@@ -66,7 +67,7 @@ export default () => {
         </li>
       ))}
       <li css={styles.channel}>
-        <CreateChannel/>
+        <CreateChannel>Add a channel</CreateChannel>
       </li>
     </ul>
   );

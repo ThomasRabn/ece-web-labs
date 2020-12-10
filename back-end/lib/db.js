@@ -36,10 +36,18 @@ module.exports = {
         })
       })
     },
-    update: (id, channel) => {
-      const original = store.channels[id]
+    update: async (id, channel) => {
+      const original = store.channel[id]
       if(!original) throw Error('Unregistered channel id')
-      store.channels[id] = merge(original, channel)
+      store.channel[id] = merge(original, channel)
+    },
+    invite: async (id, channel) => {
+      const data = await db.get(`channels:${id}`)
+      if(!data) throw Error('Unregistered channel id')
+      var original = JSON.parse(data)
+      const final = merge(original, { invitedUsers: channel.invitedUsers })
+      await db.put(`channels:${id}`, JSON.stringify(final))
+      return final
     },
     delete: (id, channel) => {
       const original = store.channels[id]
@@ -84,6 +92,7 @@ module.exports = {
       if(!user.username) throw Error('Invalid user')
       const id = uuid()
       await db.put(`users:${id}`, JSON.stringify(user))
+      await db.put(`usernames:${user.username}`, JSON.stringify({id: id}))
       return merge(user, {id: id})
     },
     get: async (id) => {
@@ -109,10 +118,54 @@ module.exports = {
         })
       })
     },
+    listNames: async () => {
+      return new Promise( (resolve, reject) => {
+        const users = []
+        db.createReadStream({
+          gt: "usernames:",
+          lte: "usernames" + String.fromCharCode(":".charCodeAt(0) + 1),
+        }).on( 'data', ({key, value}) => {
+          user = JSON.parse(value)
+          user.username = key.split(':')[1]
+          users.push(user)
+        }).on( 'error', (err) => {
+          reject(err)
+        }).on( 'end', () => {
+          resolve(users)
+        })
+      })
+    },
+    searchByName: async (nameStart) => {
+      return new Promise( (resolve, reject) => {
+        const users = []
+        db.createReadStream({
+          gte: "usernames:" + nameStart,
+          lt: "usernames:" + String.fromCharCode(nameStart.charCodeAt(0) + 1),
+          limit: 10,
+        }).on( 'data', ({key, value}) => {
+          user = JSON.parse(value)
+          user.username = key.split(':')[1]
+          users.push(user)
+        }).on( 'error', (err) => {
+          reject(err)
+        }).on( 'end', () => {
+          resolve(users)
+        })
+      })
+    },
     update: (id, user) => {
       const original = store.users[id]
       if(!original) throw Error('Unregistered user id')
       store.users[id] = merge(original, user)
+    },
+    invite: async (id, idChannel) => {
+      const data = await db.get(`users:${id}`)
+      if(!data) throw Error('Unregistered channel id')
+      var original = JSON.parse(data)
+      if(original.channels) { original.channels.push(idChannel) }
+      else                  { original.channels = [ idChannel ]}
+      await db.put(`users:${id}`, JSON.stringify(original))
+      return original
     },
     delete: (id, user) => {
       const original = store.users[id]
