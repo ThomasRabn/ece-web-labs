@@ -9,10 +9,8 @@ import {ReactComponent as ChannelIcon} from './icons/channel.svg'
 import {ReactComponent as FriendsIcon} from './icons/friends.svg'
 import {ReactComponent as SettingsIcon} from './icons/settings.svg'
 import CreateChannel from './CreateChannel'
-<<<<<<< HEAD
 import InviteFriend from './InviteFriend'
-=======
->>>>>>> master
+
 
 const useStyles = (theme) => ({
   root: {
@@ -52,18 +50,12 @@ export default () => {
         </Grid>
         <Grid item xs>
           <div css={styles.card}>
-<<<<<<< HEAD
           <InviteFriend>
-=======
->>>>>>> master
             <FriendsIcon css={styles.icon} />
             <Typography color="textPrimary">
               Invite friends
             </Typography>
-<<<<<<< HEAD
           </InviteFriend>
-=======
->>>>>>> master
           </div>
         </Grid>
         <Grid item xs>
