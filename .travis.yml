@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- '14'
+script:
+- echo 'Starting...'
+- echo 'Going into back-end & installing dependencies...'
+- cd back-end
+- npm install
+- echo 'Testing back-end...'
+- npm test
+- echo 'Going into front-end & installing dependencies...'
+- cd ../front-end
+- npm install
+- echo 'Testing front-end...'
+- npm test
