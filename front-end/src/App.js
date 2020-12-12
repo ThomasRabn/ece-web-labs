@@ -53,7 +53,7 @@ export default () => {
             )
           }
         </Route>
-        <Route path="/channels">
+        <Route path={["/channels", "/settings"]}>
           {
             oauth ? (
               <Main />

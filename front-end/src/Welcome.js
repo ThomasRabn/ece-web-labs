@@ -8,9 +8,14 @@ import Typography from '@material-ui/core/Typography'
 import {ReactComponent as ChannelIcon} from './icons/channel.svg'
 import {ReactComponent as FriendsIcon} from './icons/friends.svg'
 import {ReactComponent as SettingsIcon} from './icons/settings.svg'
+import Link from '@material-ui/core/Link'
+//local
 import CreateChannel from './CreateChannel'
 import InviteFriend from './InviteFriend'
 
+import {
+  useHistory
+} from 'react-router-dom'
 
 const useStyles = (theme) => ({
   root: {
@@ -29,6 +34,7 @@ const useStyles = (theme) => ({
 
 export default () => {
   const styles = useStyles(useTheme())
+  const history = useHistory();
   return (
     <div css={styles.root}>
       <Grid
@@ -60,10 +66,19 @@ export default () => {
         </Grid>
         <Grid item xs>
           <div css={styles.card}>
-            <SettingsIcon css={styles.icon} />
-            <Typography color="textPrimary">
-              Settings
-            </Typography>
+            <Link
+              href={`/settings`}
+              onClick={ (e) => {
+                e.preventDefault()
+                history.push(`/settings`)
+              }}
+              style={{color: 'white'}}
+            >
+             <SettingsIcon css={styles.icon} />
+                <Typography color="textPrimary">
+                  Settings
+                </Typography>
+            </Link>
           </div>
         </Grid>
       </Grid>

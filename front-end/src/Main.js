@@ -10,6 +10,7 @@ import Context from './Context'
 import Channels from './Channels'
 import Channel from './Channel'
 import Welcome from './Welcome'
+import Settings from './Settings'
 import {
   Route,
   Switch,
@@ -59,6 +60,9 @@ export default () => {
       <Switch>
         <Route path="/channels/:id">
           <Channel />
+        </Route>
+        <Route path="/settings">
+          <Settings />
         </Route>
         <Route path="/">
           <Welcome />
