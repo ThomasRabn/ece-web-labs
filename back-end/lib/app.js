@@ -21,26 +21,26 @@ app.get('/', (req, res) => {
 // Channels
 
 app.get('/channels', authenticate, async (req, res) => {
-  const channels = await db.channels.list()
+  const channels = await db.channels.list(req.headers)
   res.json(channels)
 })
 
-app.post('/channels', async (req, res) => {
-  const channel = await db.channels.create(req.body)
+app.post('/channels', authenticate, async (req, res) => {
+  const channel = await db.channels.create(req.body.channel, req.body.owner)
   res.status(201).json(channel)
 })
 
-app.get('/channels/:id', async (req, res) => {
+app.get('/channels/:id', authenticate, async (req, res) => {
   const channel = await db.channels.get(req.params.id)
   res.json(channel)
 })
 
-app.put('/channels/:id', async (req, res) => {
+app.put('/channels/:id', authenticate, async (req, res) => {
   const channel = await db.channels.update(req.params.id, req.body)
   res.json(channel)
 })
 
-app.put('/channels/:id/invite', async (req, res) => {
+app.put('/channels/:id/invite', authenticate, async (req, res) => {
   const channel = await db.channels.invite(req.params.id, req.body)
   for(const elem of req.body.invitedUsers) {
     await db.users.invite(elem.id, req.params.id)
@@ -50,44 +50,54 @@ app.put('/channels/:id/invite', async (req, res) => {
 
 // Messages
 
-app.get('/channels/:id/messages', async (req, res) => {
+app.get('/channels/:id/messages', authenticate, async (req, res) => {
   const messages = await db.messages.list(req.params.id)
   res.json(messages)
 })
 
-app.post('/channels/:id/messages', async (req, res) => {
+app.post('/channels/:id/messages', authenticate, async (req, res) => {
   const message = await db.messages.create(req.params.id, req.body)
   res.status(201).json(message)
 })
 
 // Users
 
-app.get('/users', async (req, res) => {
+app.get('/users', authenticate, async (req, res) => {
   const users = await db.users.list()
   res.json(users)
 })
 
-app.get('/usernames', async (req, res) => {
-  if(!req.query.search) {
+app.get('/usernames/search', authenticate, async (req, res) => {
+  if(!req.query.name) {
     const users = await db.users.listNames()
     res.json(users)
   } else {
-    const users = await db.users.searchByName(req.query.search)
+    const users = await db.users.searchByName(req.query.name)
     res.json(users)
   }
 })
 
-app.post('/users', async (req, res) => {
+app.get('/usernames/:name', authenticate, async (req, res) => {
+  const user = await db.users.getByUsername(req.params.name)
+  res.json(user)
+})
+
+app.get('/useremails/:email', authenticate, async (req, res) => {
+  const user = await db.users.getByEmail(req.params.email)
+  res.json(user)
+})
+
+app.post('/users', authenticate, async (req, res) => {
   const user = await db.users.create(req.body)
   res.status(201).json(user)
 })
 
-app.get('/users/:id', async (req, res) => {
+app.get('/users/:id', authenticate, async (req, res) => {
   const user = await db.users.get(req.params.id)
   res.json(user)
 })
 
-app.put('/users/:id', async (req, res) => {
+app.put('/users/:id', authenticate, async (req, res) => {
   const user = await db.users.update(req.body)
   res.json(user)
 })

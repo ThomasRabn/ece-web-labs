@@ -11,31 +11,17 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
-import Input from '@material-ui/core/Input'
+import FormControl from '@material-ui/core/FormControl'
+import { useTheme } from '@material-ui/core/styles'
+import Link from '@material-ui/core/Link'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 // Icons
 import Send from '@material-ui/icons/Send'
 import CancelIcon from '@material-ui/icons/Cancel'
-// Layout
-import { useTheme } from '@material-ui/core/styles'
-import Link from '@material-ui/core/Link'
-import Autocomplete from '@material-ui/lab/Autocomplete';
 // Popup
 import Popup from 'reactjs-popup'
 // Local
 import Context from './Context'
-import { useHistory } from 'react-router-dom'
-import { FormControl } from '@material-ui/core'
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-}
 
 const useClasses = makeStyles((theme) => ({
   formControl: {
@@ -111,8 +97,7 @@ const useStyles = (theme) => ({
 export default (props) => {
   const styles = useStyles(useTheme())
   const classes = useClasses(useTheme())
-  const history = useHistory()
-  const { oauth, channels, setChannels } = useContext(Context)
+  const { oauth, channels } = useContext(Context)
   const [chosenChannel, setChosenChannel ] = useState('')
   const [friends, setFriends ] = useState([])
   const [ userToChoose, setUserToChoose ] = useState([])
@@ -120,11 +105,10 @@ export default (props) => {
   // Popup variables
   const contentStyle = { backgroundColor: useTheme().palette.background.default }
   const overlayStyle = { background: 'rgba(0,0,0,0.7)', zIndex: 1300 }
-  const [name, setName] = useState('')
   useEffect( () => {
     const fetch = async () => {
       try{
-        let {data: response} = await axios.get('http://localhost:3001/usernames?search='+inputFriend, {
+        let {data: response} = await axios.get('http://localhost:3001/usernames/search?name='+inputFriend, {
           headers: {
             'Authorization': `Bearer ${oauth.access_token}`
           }
@@ -135,11 +119,10 @@ export default (props) => {
       }
     }
     fetch()
-  }, [inputFriend])
+  }, [oauth.access_token, inputFriend])
   const onSubmit = async () => {
     friends.forEach(elem => delete elem.username)
-    const { data: response } = await axios.put(
-      `http://localhost:3001/channels/`+chosenChannel.id+`/invite`,
+    await axios.put(`http://localhost:3001/channels/`+chosenChannel.id+`/invite`,
       {
         headers: {
           'Authorization': `Bearer ${oauth.access_token}`
@@ -153,8 +136,6 @@ export default (props) => {
   }
   const handleChange = (e) => {
     setChosenChannel(e.target.value)
-    console.log(e.target.value)
-    console.log(chosenChannel)
   }
   const handleChangeAutocomplete = (e, value) => {
     setFriends(value)

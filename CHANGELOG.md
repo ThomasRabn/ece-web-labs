@@ -2,6 +2,12 @@
 
 All noteable changes on this repository will be written in this file.
 
+## 0.0.3 - Private Channels - 17-12-2020
+
+### Added
+
+- Each created channel is private to the owner. The owner can also invite people to their channels.
+
 ## 0.0.2 - Invite Friends - 12-12-2020
 
 ### Added

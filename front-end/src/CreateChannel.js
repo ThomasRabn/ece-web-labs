@@ -78,15 +78,19 @@ export default (props) => {
   const overlayStyle = { background: 'rgba(0,0,0,0.7)', zIndex: 1300 }
   const [name, setName] = useState('')
   const onSubmit = async () => {
-    const {data: answer} = await axios.post(
-      `http://localhost:3001/channels/`,
+    const {data: answer} = await axios.post(`http://localhost:3001/channels/`,
+      {
+        channel: {
+          name: name
+        },
+        owner: oauth.email,
+      },
       {
         headers: {
           'Authorization': `Bearer ${oauth.access_token}`
         },
-        name: name,
-        owner: oauth.email,
-      })
+      }
+    )
     setName('')
     channels.push(answer)
     setChannels(channels)

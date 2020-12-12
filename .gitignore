@@ -1,2 +1,11 @@
+# Node modules
 node_modules
+
+# Database instance
 /back-end/db
+
+# VSCode config
+.vscode
+
+# Environnment variable
+.env

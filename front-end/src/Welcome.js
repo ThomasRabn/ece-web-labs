@@ -1,15 +1,18 @@
-import {} from 'react';
+import { useContext } from 'react'
+import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
 import { useTheme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+// Local
 import {ReactComponent as ChannelIcon} from './icons/channel.svg'
 import {ReactComponent as FriendsIcon} from './icons/friends.svg'
 import {ReactComponent as SettingsIcon} from './icons/settings.svg'
 import CreateChannel from './CreateChannel'
-import InviteFriends from './InviteFriends';
+import InviteFriends from './InviteFriends'
+import Context from './Context'
 
 const useStyles = (theme) => ({
   root: {
@@ -27,7 +30,25 @@ const useStyles = (theme) => ({
 })
 
 export default () => {
+  const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
+  // Create account if does not exist
+  const { data: account } = axios.get(`http://localhost:3001/useremails/`+oauth.email)
+  if(!account) {
+    // TODO: create a form for the user to create an account
+    const {data: answer} = axios.post(`http://localhost:3001/users/`,
+      {
+        username: "Thomas",
+        email: oauth.email,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        },
+      }
+    )
+    console.log(answer)
+  }
   return (
     <div css={styles.root}>
       <Grid
