@@ -2,6 +2,12 @@
 
 All noteable changes on this repository will be written in this file.
 
+## 0.0.2 - Invite Friends - 12-12-2020
+
+### Added
+
+- Ability to invite friends to a channel.
+
 ## 0.0.1 - Channel Creation - 10-12-2020
 
 ### Added
