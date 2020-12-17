@@ -34,13 +34,13 @@ describe('messages', () => {
       // and a message inside it
       await supertest(app)
       .post(`/channels/${channel.id}/messages`)
-      .send({author: 'whoami', content: 'Hello ECE'})
+      .send({author: 'test', content: 'Hello ECE'})
       // Get messages
       const {body: messages} = await supertest(app)
       .get(`/channels/${channel.id}/messages`)
       .expect(200)
       messages.should.match([{
-        author: 'whoami',
+        author: 'test',
         creation: (it) => it.should.be.approximately(microtime.now(), 1000000),
         content: 'Hello ECE'
       }])

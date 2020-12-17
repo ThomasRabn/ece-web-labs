@@ -3,12 +3,14 @@ import axios from 'axios'
 import {useHistory} from 'react-router-dom'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
-import Link from '@material-ui/core/Link'
+// Core components
+import {
+  Link
+} from '@material-ui/core'
 // Local
 import Context from './Context'
 import CreateChannel from './CreateChannel'
-import 'reactjs-popup/dist/index.css';
+import 'reactjs-popup/dist/index.css'
 
 const styles = {
   channels: {

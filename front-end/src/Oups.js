@@ -1,7 +1,7 @@
 
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
+// Style
 import { useTheme } from '@material-ui/core/styles';
 
 const useStyles = (theme) => ({

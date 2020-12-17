@@ -56,8 +56,18 @@ app.get('/channels/:id/messages', authenticate, async (req, res) => {
 })
 
 app.post('/channels/:id/messages', authenticate, async (req, res) => {
-  const message = await db.messages.create(req.params.id, req.body)
+  const message = await db.messages.create(req.params.id, req)
   res.status(201).json(message)
+})
+
+app.delete('/channels/:id/messages/:idMessage', authenticate, async (req, res) => {
+  const message = await db.messages.delete(req.params.id, req.params.idMessage, req)
+  res.status(204).json(message)
+})
+
+app.put('/channels/:id/messages/:idMessage', authenticate, async (req, res) => {
+  const message = await db.messages.update(req.params.id, req.params.idMessage, req)
+  res.json(message)
 })
 
 // Users

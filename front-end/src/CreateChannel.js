@@ -1,22 +1,21 @@
 import { useState, useContext } from 'react'
 import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Core
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Grid from '@material-ui/core/Grid'
+// Styles
+import { useTheme } from '@material-ui/core/styles'
+// Core components
+import {
+  Button, TextField, Grid, Link
+} from '@material-ui/core'
 // Icons 
 import Send from '@material-ui/icons/Send'
 import CancelIcon from '@material-ui/icons/Cancel'
-// Layout
-import { useTheme } from '@material-ui/core/styles'
-import Link from '@material-ui/core/Link'
 // Popup
 import Popup from 'reactjs-popup'
 // Local
 import Context from './Context'
-import { useHistory } from 'react-router-dom'
 
 const useStyles = (theme) => ({
   channels: {

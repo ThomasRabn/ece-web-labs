@@ -1,27 +1,20 @@
-import { useState,useContext } from 'react'
+import { useState, useContext } from 'react'
 import axios from 'axios'
-/** @jsx jsx */
-import { jsx } from '@emotion/core'
-// Layout
-import { useTheme } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-//Local
-import Context from './Context'
 import {
   useHistory
 } from 'react-router-dom'
+/** @jsx jsx */
+import { jsx } from '@emotion/core'
+// Style
+import { useTheme, makeStyles } from '@material-ui/core/styles'
+// Core components
+import {
+  Typography, Avatar, Button, CssBaseline, TextField, Container
+} from '@material-ui/core'
+// Icons
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+//Local
+import Context from './Context'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
-  const [ name , setname] = useState([])
-  const [ email , setemail] = useState([])
-  const history = useHistory();
+  const [ name , setName] = useState('')
+  const [ email , setEmail] = useState('')
+  const history = useHistory()
   const onSubmit = async () => {
     await axios.post('http://localhost:3001/users/',
       {
@@ -60,15 +53,15 @@ export default () => {
           'Authorization': `Bearer ${oauth.access_token}`
         },
       })
-      setname('')
-      setemail('')
+      setName('')
+      setEmail('')
   }
 
   const handleChange = (e) => {
-    setname(e.target.value)
+    setName(e.target.value)
   }
   const handleChangeEmail = (e) => {
-    setemail(e.target.value)
+    setEmail(e.target.value)
   }
 
   return (
@@ -109,7 +102,7 @@ export default () => {
             color="secondary"
             css={styles.submit}
             onClick = {(e) => {
-              onSubmit();
+              onSubmit()
               e.preventDefault()
               history.push("/channels")
             }}
@@ -119,5 +112,5 @@ export default () => {
         </form>
       </div>
     </Container>
-  );
+  )
 }

@@ -1,20 +1,20 @@
 import {useContext} from 'react'
+import {
+  Route,
+  Switch,
+} from 'react-router-dom'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Drawer from '@material-ui/core/Drawer';
+import { useTheme } from '@material-ui/core/styles'
+// Core components
+import { useMediaQuery, Drawer } from '@material-ui/core/'
 // Local
 import Context from './Context'
 import Channels from './Channels'
 import Channel from './Channel'
 import Welcome from './Welcome'
 import Settings from './Settings'
-import {
-  Route,
-  Switch,
-} from 'react-router-dom'
 
 const useStyles = (theme) => ({
   root: {

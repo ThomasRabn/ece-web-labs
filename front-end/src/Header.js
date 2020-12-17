@@ -2,15 +2,17 @@
 import { useContext } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
-import { useTheme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+// Styles
+import { useTheme } from '@material-ui/core/styles'
+// Core components
+import {
+  Button, IconButton, Avatar
+} from '@material-ui/core';
 // Icons
-import IconButton from '@material-ui/core/IconButton';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import MenuIcon from '@material-ui/icons/Menu';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import MenuIcon from '@material-ui/icons/Menu'
+// Local
 import Context from './Context'
-import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = (theme) => ({
   header: {

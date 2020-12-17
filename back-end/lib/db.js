@@ -10,9 +10,7 @@ module.exports = {
     create: async (channel, ownerEmail) => {
       if(!channel.name) throw Error('Invalid channel')
       const id = uuid()
-      console.log("ownerEmail:"+ownerEmail)
       var owner = await module.exports.users.getByEmail(ownerEmail)
-      console.log("after call:"+owner)
       channel.ownerId = owner.id
       channel = merge(channel, {usersId: [ owner.id ]})
       await db.put(`channels:${id}`, JSON.stringify(channel))
@@ -66,16 +64,32 @@ module.exports = {
     }
   },
   messages: {
-    create: async (channelId, message) => {
+    create: async (channelId, req) => {
       if(!channelId) throw Error('Invalid channel')
-      if(!message.author) throw Error('Invalid message')
-      if(!message.content) throw Error('Invalid message')
+      if(!req.body.content) throw Error('Invalid message')
       creation = microtime.now()
-      await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
-        author: message.author,
-        content: message.content
-      }))
-      return merge(message, {channelId: channelId, creation: creation})
+      const author = await module.exports.users.getByEmail(req.user.email)
+      if(author) {
+        await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
+          authorId: author.id,
+          author: author.username,
+          content: req.body.content,
+        }))
+        return merge(req.body, {creation: creation})
+      } else {
+        return null
+      }
+    },
+    get: async (channelId, creation)=> {
+      try {
+        if(!channelId) throw Error('Invalid channel id')
+        if(!creation) throw Error('Invalid message id')
+        const data = await db.get(`messages:${channelId}:${creation}`)
+        const message = JSON.parse(data)
+        return merge(message, {creation: creation})
+      } catch {
+        return null
+      }
     },
     list: async (channelId) => {
       return new Promise( (resolve, reject) => {
@@ -96,6 +110,36 @@ module.exports = {
         })
       })
     },
+    update: async (channelId, creation, req) => {
+      try {
+        if(!channelId) throw Error('Invalid channel')
+        if(!creation) throw Error('Invalid message')
+        if(!req) throw Error('Invalid request')
+        const idRequester = (await module.exports.users.getByEmail(req.user.email)).id
+        var message = await module.exports.messages.get(channelId, creation)
+        message.content = req.body.content
+        await db.put(`messages:${channelId}:${creation}`, JSON.stringify(message))
+        return message
+      } catch {
+        return null
+      }
+    },
+    delete: async (channelId, creation, req) => {
+      try {
+        if(!channelId) throw Error('Invalid channel')
+        if(!creation) throw Error('Invalid message')
+        if(!req) throw Error('Invalid request')
+        const idRequester = (await module.exports.users.getByEmail(req.user.email)).id
+        const message = await module.exports.messages.get(channelId, creation)
+        if (message.authorId == idRequester) {
+          await db.del(`messages:${channelId}:${creation}`)
+          return { success: true }
+        }
+        return null
+      } catch {
+        return null
+      }
+    },
   },
   users: {
     create: async (user) => {
@@ -111,68 +155,29 @@ module.exports = {
     },
     get: async (id) => {
       if(!id) throw Error('Invalid id')
-      console.log("in get id")
       const data = await db.get(`users:${id}`)
       const user = JSON.parse(data)
       return merge(user, {id: id})
     },
     getByEmail: async (email) => {
-      if(!email) throw Error('Invalid email')
-      // Get a user with his email
-      // const value = db.get(`userEmails:${email}`, async (err, userId) => {
-      //   if (err) {
-      //     if (err.notFound) {
-      //       console.log("user email not found")
-      //       userId = undefined
-      //       return userId
-      //     }
-      //   }
-      //   console.log("here")
-      //   const result = await module.exports.users.get(JSON.parse(userId).id)
-      //   console.log("result email: ")
-      //   console.log(result)
-      //   return result
-      // })
-      // console.log("here")
-      // value.then(console.log(value))
-      // console.log("here")
-      // value.then(console.log("value emails: "+value))
-      // db.get(`userEmails:${emails}`, function (err, userId) {
-      //   if (err) { console.log('user email does not exist'); return }
-      //   console.log('got user =', userId)
-      //   return module.exports.users.get(userId.id)
-      // })
-      var userId = await db.get(`userEmails:${email}`)
-      userId = JSON.parse(userId)
-      return module.exports.users.get(userId.id)
+      try {
+        if(!email) throw Error('Invalid email')
+        var userId = await db.get(`userEmails:${email}`)
+        userId = JSON.parse(userId)
+        return module.exports.users.get(userId.id)
+      } catch {
+        return null
+      }
     },
     getByUsername: async (username) => {
-      if(!username) throw Error('Invalid username')
-      // Get a user with his username
-      // db.get(`usernames:${username}`, (err, userId) => {
-      //   if (err) {
-      //     if (err.notFound) {
-      //       console.log("username not found")
-      //       userId = undefined
-      //       return userId
-      //     }
-      //   }
-      //   console.log(JSON.parse(userId).id)
-      //   const result = module.exports.users.get(JSON.parse(userId).id)
-      //   console.log("result name: "+result)
-      //   resolve()
-      // }).then(
-      //   console.log("out"),
-      //   // console.log("value username: "+result)
-      // )
-      // return db.get(`usernames:${username}`, function (err, userId) {
-      //   if (err) { console.log('username does not exist'); return }
-      //   console.log('got user =', userId)
-      //   return module.exports.users.get(userId.id)
-      // })
+      try {
+        if(!username) throw Error('Invalid username')
       var userId = await db.get(`usernames:${username}`)
       userId = JSON.parse(userId)
       return module.exports.users.get(userId.id)
+      } catch {
+        return null
+      }
     },
     list: async () => {
       return new Promise( (resolve, reject) => {

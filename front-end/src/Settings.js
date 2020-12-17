@@ -1,40 +1,24 @@
-import {useContext, useState} from 'react';
+import { React } from 'react'
 /** @jsx jsx */
-import { jsx, ThemeContext} from '@emotion/core'
-// Layout
+import { jsx } from '@emotion/core'
+// Style
 import { useTheme } from '@material-ui/core/styles'
-import { makeStyles } from '@material-ui/core/styles';
-//Core
-import TextField from '@material-ui/core/TextField'
-import Grid from '@material-ui/core/Grid'
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Input from '@material-ui/core/Input';
-import React from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
-import Select from '@material-ui/core/Select';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
-import VolumeDown from '@material-ui/icons/VolumeDown';
-import VolumeUp from '@material-ui/icons/VolumeUp';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import MobileStepper from '@material-ui/core/MobileStepper';
-import Paper from '@material-ui/core/Paper';
-//Icon
+// Core components
+import {
+  TextField, Grid, InputLabel, InputAdornment, Input, Checkbox,
+  FormControl, ListItemText, Select, Typography, Slider, Chip,
+  Button, IconButton, Paper, MobileStepper, MenuItem
+} from '@material-ui/core'
+// Icons
+import AccountCircle from '@material-ui/icons/AccountCircle'
+import VolumeDown from '@material-ui/icons/VolumeDown'
+import VolumeUp from '@material-ui/icons/VolumeUp'
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import MailIcon from '@material-ui/icons/Mail'
-import Button from '@material-ui/core/Button'
 import Send from '@material-ui/icons/Send'
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import IconButton from '@material-ui/core/IconButton';
-// Local
-import Context from './Context'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
 
 const useStyles = (theme) => ({
   root: {
@@ -74,8 +58,8 @@ const useStyles = (theme) => ({
   },
 })
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
 const MenuProps = {
   PaperProps: {
     style: {
@@ -83,7 +67,7 @@ const MenuProps = {
       width: 250,
     },
   },
-};
+}
 
 const names = [
   'Worms',
@@ -96,7 +80,7 @@ const names = [
   'WOOOORMS',
   'WOOOOOORMS',
   'CHILl',
-];
+]
 
 function getStyles(name, personName, theme) {
   return {
@@ -104,7 +88,7 @@ function getStyles(name, personName, theme) {
       personName.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
-  };
+  }
 }
 
 const tutorialSteps = [
@@ -133,233 +117,232 @@ const tutorialSteps = [
     imgPath:
       'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60',
   },
-];
+]
 
 export default () => {
-  const theme = useTheme();
+  const theme = useTheme()
   const [values, setValues] = React.useState({
     password: '',
     showPassword: false,
-  });
-//Paswword
-const handleClickShowPassword = () => {
-      setValues({ ...values, showPassword: !values.showPassword });
-    };
-const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-      };
-//CheckBox
-const [checked, setChecked] = React.useState(true);
-const handleChangeCheck = (event) => {
-        setChecked(event.target.checked);
-      };
-//Tag
-const [personName, setPersonName] = React.useState([]);
-const handleChangeChips = (event) => {
-          setPersonName(event.target.value);
-        };
-//Volume
-const [valueV, setValueV] = React.useState(30);
-const handleChangeV = (event, newValue) => {
-            setValueV(newValue);
-          };
-//Image
-const [activeStep, setActiveStep] = React.useState(0);
-const maxSteps = tutorialSteps.length;
-const handleNext = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      };
-const handleBack = () => {
-            setActiveStep((prevActiveStep) => prevActiveStep - 1);
-        };
-const handleChange = (prop) => (event) => {
-          setValues({ ...values, [prop]: event.target.value });
-        }
+  })
+  //Password
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword })
+  }
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault()
+  }
+  //CheckBox
+  const [checked, setChecked] = React.useState(true)
+  const handleChangeCheck = (event) => {
+    setChecked(event.target.checked)
+  }
+  //Tag
+  const [personName, setPersonName] = React.useState([])
+  const handleChangeChips = (event) => {
+    setPersonName(event.target.value)
+  }
+  //Volume
+  const [valueV, setValueV] = React.useState(30)
+  const handleChangeV = (event, newValue) => {
+    setValueV(newValue)
+  }
+  //Image
+  const [activeStep, setActiveStep] = React.useState(0)
+  const maxSteps = tutorialSteps.length
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+  }
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
   const styles = useStyles(useTheme())
-  const {oauth} = useContext(Context)
 
   return (
     <div >
-      <form  css={styles.root} noValidate autoComplete="off">
-       <div>
-       <Grid container spacing={1} alignItems="flex-end">
-         <Grid item>
-           <AccountCircle />
-         </Grid>
-         <Grid item>
-           <TextField id="input-with-icon-grid" label="Name" />
-         </Grid>
-       </Grid>
-       </div>
-       <div>
-       <Grid container spacing={1} alignItems="flex-end">
-         <Grid item>
-           <MailIcon />
-         </Grid>
-         <Grid item>
-           <TextField id="input-with-icon-grid" label="Email Adress" />
-         </Grid>
-       </Grid>
-       </div>
-       <div css={styles.margin}>
-        <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-        <Input
-         id="standard-adornment-password"
-         type={values.showPassword ? 'text' : 'password'}
-         value={values.password}
-         onChange={handleChange('password')}
-         endAdornment={
-           <InputAdornment position="end">
-             <IconButton
-               aria-label="toggle password visibility"
-               onClick={handleClickShowPassword}
-               onMouseDown={handleMouseDownPassword}
-             >
-               {values.showPassword ? <Visibility /> : <VisibilityOff />}
-             </IconButton>
-           </InputAdornment>
-          }
-          />
-       </div>
-       <div>
-        <TextField
-          id="date"
-          label="Birthday"
-          type="date"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          />
-       </div>
-       <div>
-        <TextField
-          id="time"
-          label="Alarm clock"
-          type="time"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            step: 300, // 5 min
-          }}
-        />
-       </div>
-       <div>
-        <Checkbox
-          checked={checked}
-          onChange={handleChangeCheck}
-          inputProps={{ 'aria-label': 'primary checkbox' }}
-        />
-       <Checkbox
-        defaultChecked
-        color="primary"
-        inputProps={{ 'aria-label': 'secondary checkbox' }}
-       />
-       </div>
-       <div>
-        <FormControl css={styles.formControl}>
-        <InputLabel id="demo-mutiple-checkbox-label">Tag</InputLabel>
-        <Select
-          labelId="demo-mutiple-checkbox-label"
-          id="demo-mutiple-checkbox"
-          multiple
-          value={personName}
-          onChange={handleChangeChips}
-          input={<Input />}
-          renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}
-          >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
-          ))}
-        </Select>
-        </FormControl>
-        <FormControl css={styles.formControl}>
-       <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
-        <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
-          multiple
-          value={personName}
-          onChange={handleChangeChips}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={(selected) => (
-            <div css={styles.chips}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} css={styles.chip}/>
-              ))}
-            </div>
-          )}
-          MenuProps={MenuProps}
-         >
-        {names.map((name) => (
-          <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-            {name}
-          </MenuItem>
-         ))}
-        </Select>
-        </FormControl>
-       </div>
-       <div>
-        <Typography id="continuous-slider" gutterBottom>
-          Volume
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item>
-            <VolumeDown />
+      <form css={styles.root} noValidate autoComplete="off">
+        <div>
+          <Grid container spacing={1} alignItems="flex-end">
+            <Grid item>
+              <AccountCircle />
+            </Grid>
+            <Grid item>
+              <TextField id="input-with-icon-grid" label="Name" />
+            </Grid>
           </Grid>
-        <Grid item xs>
-          <Slider value={valueV} onChange={handleChangeV} aria-labelledby="continuous-slider" />
-        </Grid>
-        <Grid item>
-          <VolumeUp />
-        </Grid>
-        </Grid>
-       </div>
-       <div>
-        <Paper square elevation={0} css={styles.header}>
-          <Typography>{tutorialSteps[activeStep].label}</Typography>
-        </Paper>
-        <img
-          css={styles.img}
-          src={tutorialSteps[activeStep].imgPath}
-          alt={tutorialSteps[activeStep].label}
-        />
-        <MobileStepper
-          steps={maxSteps}
-          position="static"
-          variant="text"
-          activeStep={activeStep}
-          nextButton={
-            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-              Next
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-            </Button>
+        </div>
+        <div>
+          <Grid container spacing={1} alignItems="flex-end">
+            <Grid item>
+              <MailIcon />
+            </Grid>
+            <Grid item>
+              <TextField id="input-with-icon-grid" label="Email Adress" />
+            </Grid>
+          </Grid>
+        </div>
+        <div css={styles.margin}>
+          <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+          <Input
+            id="standard-adornment-password"
+            type={values.showPassword ? 'text' : 'password'}
+            value={values.password}
+            onChange={handleChange('password')}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
             }
-          backButton={
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+          />
+        </div>
+        <div>
+          <TextField
+            id="date"
+            label="Birthday"
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
+        <div>
+          <TextField
+            id="time"
+            label="Alarm clock"
+            type="time"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              step: 300, // 5 min
+            }}
+          />
+        </div>
+        <div>
+          <Checkbox
+            checked={checked}
+            onChange={handleChangeCheck}
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+          <Checkbox
+            defaultChecked
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+        </div>
+        <div>
+          <FormControl css={styles.formControl}>
+            <InputLabel id="demo-mutiple-checkbox-label">Tag</InputLabel>
+            <Select
+              labelId="demo-mutiple-checkbox-label"
+              id="demo-mutiple-checkbox"
+              multiple
+              value={personName}
+              onChange={handleChangeChips}
+              input={<Input />}
+              renderValue={(selected) => selected.join(', ')}
+              MenuProps={MenuProps}
+            >
+              {names.map((name) => (
+                <MenuItem key={name} value={name}>
+                  <Checkbox checked={personName.indexOf(name) > -1} />
+                  <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl css={styles.formControl}>
+            <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
+            <Select
+              labelId="demo-mutiple-chip-label"
+              id="demo-mutiple-chip"
+              multiple
+              value={personName}
+              onChange={handleChangeChips}
+              input={<Input id="select-multiple-chip" />}
+              renderValue={(selected) => (
+                <div css={styles.chips}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} css={styles.chip} />
+                  ))}
+                </div>
+              )}
+              MenuProps={MenuProps}
+            >
+              {names.map((name) => (
+                <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+        <div>
+          <Typography id="continuous-slider" gutterBottom>
+            Volume
+        </Typography>
+          <Grid container spacing={2}>
+            <Grid item>
+              <VolumeDown />
+            </Grid>
+            <Grid item xs>
+              <Slider value={valueV} onChange={handleChangeV} aria-labelledby="continuous-slider" />
+            </Grid>
+            <Grid item>
+              <VolumeUp />
+            </Grid>
+          </Grid>
+        </div>
+        <div>
+          <Paper square elevation={0} css={styles.header}>
+            <Typography>{tutorialSteps[activeStep].label}</Typography>
+          </Paper>
+          <img
+            css={styles.img}
+            src={tutorialSteps[activeStep].imgPath}
+            alt={tutorialSteps[activeStep].label}
+          />
+          <MobileStepper
+            steps={maxSteps}
+            position="static"
+            variant="text"
+            activeStep={activeStep}
+            nextButton={
+              <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+                Next
+              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
               Back
             </Button>
-          }
-        />
-       </div>
+            }
+          />
+        </div>
       </form>
       <div>
-      <Button
-        style={{ marginLeft: "0 15% 0 auto" }}
-        type="input"
-        variant="contained"
-        color="secondary"
-        //onClick={}
-        endIcon={<Send />}
-      >
-        Edit
+        <Button
+          style={{ marginLeft: "0 15% 0 auto" }}
+          type="input"
+          variant="contained"
+          color="secondary"
+          //onClick={}
+          endIcon={<Send />}
+        >
+          Edit
       </Button>
       </div>
     </div>
-  );
+  )
 }

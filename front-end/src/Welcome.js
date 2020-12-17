@@ -1,11 +1,16 @@
 import { useContext,useEffect } from 'react'
 import axios from 'axios'
+import {
+  useHistory
+} from 'react-router-dom'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
+// Style
 import { useTheme } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
+// Core component
+import {
+  Grid, Link, Typography
+} from '@material-ui/core'
 // Local
 import {ReactComponent as ChannelIcon} from './icons/channel.svg'
 import {ReactComponent as FriendsIcon} from './icons/friends.svg'
@@ -13,10 +18,6 @@ import {ReactComponent as SettingsIcon} from './icons/settings.svg'
 import CreateChannel from './CreateChannel'
 import InviteFriends from './InviteFriends'
 import Context from './Context'
-import Link from '@material-ui/core/Link'
-import {
-  useHistory
-} from 'react-router-dom'
 
 const useStyles = (theme) => ({
   root: {
@@ -39,23 +40,23 @@ export default () => {
   const history = useHistory();
   // Create account if does not exist
   useEffect( () => {
-  const fetchUser = async () => {
-    try{
-      const {data: account} = await axios.get(`http://localhost:3001/useremails/`+oauth.email,
-      {
-        headers: {
-          'Authorization': `Bearer ${oauth.access_token}`
-        },
-      })
-      if(!account) {
-        history.push('/register')
+    const fetchUser = async () => {
+      try{
+        const {data: account} = await axios.get(`http://localhost:3001/useremails/`+oauth.email,
+        {
+          headers: {
+            'Authorization': `Bearer ${oauth.access_token}`
+          },
+        })
+        if(!account) {
+          history.push('/register')
+        }
+      }catch(err){
+        console.error(err)
       }
-    }catch(err){
-      console.error(err)
     }
-  }
-  fetchUser()
-})
+    fetchUser()
+  })
   return (
     <div css={styles.root}>
       <Grid
@@ -96,7 +97,7 @@ export default () => {
             }}
             style={{color: 'white'}}
           >
-           <SettingsIcon css={styles.icon} />
+          <SettingsIcon css={styles.icon} />
               <Typography color="textPrimary">
                 Settings
               </Typography>

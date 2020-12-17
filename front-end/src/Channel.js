@@ -2,9 +2,11 @@ import { useContext, useRef, useState } from 'react'
 import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
+// Style
 import { useTheme } from '@material-ui/core/styles'
+// Core components
 import Fab from '@material-ui/core/Fab'
+// Icons
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 // Local
 import Form from './channel/Form'
@@ -34,7 +36,7 @@ const useStyles = (theme) => ({
 export default () => {
   const history = useHistory()
   const { id } = useParams()
-  const {channels} = useContext(Context)
+  const { channels, oauth } = useContext(Context)
   const channel = channels.find( channel => channel.id === id)
   if(!channel) {
     history.push('/oups')
@@ -45,12 +47,17 @@ export default () => {
   const channelId = useRef()
   const [messages, setMessages] = useState([])
   const [scrollDown, setScrollDown] = useState(false)
-  const addMessage = (message) => {
+  const updateMessages = () => {
     fetchMessages()
   }
   const fetchMessages = async () => {
     setMessages([])
-    const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`)
+    const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`,
+    {
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      }
+    })
     setMessages(messages)
     if(listRef.current){
       listRef.current.scroll()
@@ -71,10 +78,11 @@ export default () => {
       <List
         channel={channel}
         messages={messages}
+        updateMessages={updateMessages}
         onScrollDown={onScrollDown}
         ref={listRef}
       />
-      <Form addMessage={addMessage} channel={channel} />
+      <Form updateMessages={updateMessages} channel={channel} />
       <Fab
         color="primary"
         aria-label="Latest messages"

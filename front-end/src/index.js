@@ -1,16 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { CookiesProvider } from 'react-cookie';
-import './index.css';
-import App from './App';
-import { Provider as ContextProvider } from './Context';
-import * as serviceWorker from './serviceWorker';
-import 'typeface-roboto'
-// Layout
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import React from 'react'
+import ReactDOM from 'react-dom'
 import {
   BrowserRouter as Router,
-} from "react-router-dom";
+} from 'react-router-dom'
+import { CookiesProvider } from 'react-cookie'
+// Styles
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+// Local
+import './index.css'
+import App from './App'
+import { Provider as ContextProvider } from './Context'
+import * as serviceWorker from './serviceWorker'
+// Font
+import 'typeface-roboto'
 
 const theme = createMuiTheme({
   palette: {
@@ -28,7 +30,7 @@ const theme = createMuiTheme({
       contrastText: '#fff',
     },
   }
-});
+})
 
 ReactDOM.render(
   <React.StrictMode>

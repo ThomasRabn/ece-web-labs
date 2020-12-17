@@ -1,19 +1,19 @@
 import { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
+import { useHistory } from 'react-router-dom'
 import crypto from 'crypto'
 import qs from 'qs'
 import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
-import { useTheme } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link'
-import Button from '@material-ui/core/Button';
+// Style
+import { useTheme } from '@material-ui/core/styles'
+// Core components
+import { Link, Button } from '@material-ui/core/'
 // Icons
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import AccountCircle from '@material-ui/icons/AccountCircle'
 // Local
 import Context from './Context'
-import { useHistory } from "react-router-dom";
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -83,7 +83,6 @@ const Redirect = ({
     ].join('')
     window.location = url
   }
-  const history = useHistory();
   return (
     <div css={styles.root}>
       <div css={styles.centered}>

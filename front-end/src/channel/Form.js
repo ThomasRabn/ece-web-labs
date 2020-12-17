@@ -3,11 +3,14 @@ import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
-import Button from "@material-ui/core/Button"
-// import Icon from "@material-ui/core/Icon"
-import SendIcon from "@material-ui/icons/Send"
-import TextField from '@material-ui/core/TextField'
 import { useTheme } from '@material-ui/core/styles'
+// Core
+import {
+  Button, TextField
+} from '@material-ui/core'
+// Icons
+import SendIcon from '@material-ui/icons/Send'
+// Local
 import Context from '../Context'
 
 const useStyles = (theme) => {
@@ -32,20 +35,23 @@ const useStyles = (theme) => {
 }
 
 export default ({
-  addMessage,
+  updateMessages,
   channel,
 }) => {
   const [content, setContent] = useState('')
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
   const onSubmit = async () => {
-    const {data: message} = await axios.post(
-      `http://localhost:3001/channels/${channel.id}/messages`
-    , {
+    await axios.post(`http://localhost:3001/channels/${channel.id}/messages`,
+    {
       content: content,
-      author: oauth.email,
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      }
     })
-    addMessage(message)
+    updateMessages()
     setContent('')
   }
   const handleChange = (e) => {
