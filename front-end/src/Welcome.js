@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext,useEffect } from 'react'
 import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
@@ -14,8 +14,6 @@ import CreateChannel from './CreateChannel'
 import InviteFriends from './InviteFriends'
 import Context from './Context'
 import Link from '@material-ui/core/Link'
-
-
 import {
   useHistory
 } from 'react-router-dom'
@@ -40,22 +38,24 @@ export default () => {
   const styles = useStyles(useTheme())
   const history = useHistory();
   // Create account if does not exist
-  const { data: account } = axios.get(`http://localhost:3001/useremails/`+oauth.email)
-  if(!account) {
-    // TODO: create a form for the user to create an account
-    const {data: answer} = axios.post(`http://localhost:3001/users/`,
-      {
-        username: "Thomas",
-        email: oauth.email,
-      },
+  useEffect( () => {
+  const fetchUser = async () => {
+    try{
+      const {data: account} = await axios.get(`http://localhost:3001/useremails/`+oauth.email,
       {
         headers: {
           'Authorization': `Bearer ${oauth.access_token}`
         },
+      })
+      if(!account) {
+        history.push('/register')
       }
-    )
-    console.log(answer)
+    }catch(err){
+      console.error(err)
+    }
   }
+  fetchUser()
+})
   return (
     <div css={styles.root}>
       <Grid

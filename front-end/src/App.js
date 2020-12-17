@@ -9,6 +9,7 @@ import Header from './Header'
 import Main from './Main'
 import Login from './Login'
 import Context from './Context'
+import Register from './Register'
 // Rooter
 import {
   Switch,
@@ -53,7 +54,7 @@ export default () => {
             )
           }
         </Route>
-        <Route path={["/channels", "/settings"]}>
+        <Route path={["/channels", "/settings",]}>
           {
             oauth ? (
               <Main />
@@ -67,6 +68,11 @@ export default () => {
             )
           }
         </Route>
+        /*<Route path={"/register"}>
+          {
+              <Register />
+          }
+        </Route>*/
         <Route path="/Oups">
           <Oups />
         </Route>

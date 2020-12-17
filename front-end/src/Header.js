@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import Context from './Context'
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = (theme) => ({
   header: {
@@ -17,7 +18,6 @@ const useStyles = (theme) => ({
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.default,
     flexShrink: 0,
-    
   },
   toRight: {
     float: 'right',
@@ -61,7 +61,10 @@ export default ({
       {
         oauth ?
           <div style={{width: '100%'}}>
-            <div style={{float: 'left'}} css={styles.verticallyCenter}>{oauth.email}</div>
+            <div style={{float: 'left'}} css={styles.verticallyCenter}>
+              <Avatar alt="Profil" src="./image/thomsko.png" />
+              {oauth.email}
+              </div>
             <div css={styles.toRight}>
               <Button
                 variant="contained"
@@ -77,7 +80,7 @@ export default ({
         :
           <span></span>
       }
-      
+
     </header>
   );
 }

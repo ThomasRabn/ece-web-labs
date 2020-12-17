@@ -9,7 +9,7 @@ import { jsx } from '@emotion/core'
 import { useTheme } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button';
-// Icons 
+// Icons
 import AccountCircle from '@material-ui/icons/AccountCircle';
 // Local
 import Context from './Context'
@@ -83,6 +83,7 @@ const Redirect = ({
     ].join('')
     window.location = url
   }
+  const history = useHistory();
   return (
     <div css={styles.root}>
       <div css={styles.centered}>
