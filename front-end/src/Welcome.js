@@ -13,15 +13,12 @@ import {ReactComponent as SettingsIcon} from './icons/settings.svg'
 import CreateChannel from './CreateChannel'
 import InviteFriends from './InviteFriends'
 import Context from './Context'
-<<<<<<< HEAD
-=======
 import Link from '@material-ui/core/Link'
 
 
 import {
   useHistory
 } from 'react-router-dom'
->>>>>>> thomas
 
 const useStyles = (theme) => ({
   root: {
@@ -41,10 +38,7 @@ const useStyles = (theme) => ({
 export default () => {
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
-<<<<<<< HEAD
-=======
   const history = useHistory();
->>>>>>> thomas
   // Create account if does not exist
   const { data: account } = axios.get(`http://localhost:3001/useremails/`+oauth.email)
   if(!account) {
@@ -89,11 +83,7 @@ export default () => {
                 Invite friends
               </Typography>
             </InviteFriends>
-<<<<<<< HEAD
-            
-=======
 
->>>>>>> thomas
           </div>
         </Grid>
         <Grid item xs>
