@@ -7,6 +7,8 @@
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "crypto-js": "^4.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.11.0",
@@ -38,9 +40,9 @@
     "recursive": true
   },
   "scripts": {
-    "reset": "bin/reset",
-    "develop": "bin/init && bin/start",
-    "start": "bin/start",
+    "reset": "node bin/reset",
+    "develop": "node bin/init && node bin/start",
+    "start": "node bin/start",
     "test": "mocha 'test/**/*.js'"
   }
 }

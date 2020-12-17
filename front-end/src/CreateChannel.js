@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 // Icons 
 import Send from '@material-ui/icons/Send'
+import CancelIcon from '@material-ui/icons/Cancel'
 // Layout
 import { useTheme } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
@@ -31,7 +32,6 @@ const useStyles = (theme) => ({
     fontSize: '1.2em'
   },
   modal: {
-    background: '#fff',
     backgroundColor: '#fff',
     border: '1px solid #fff'
   },
@@ -40,7 +40,7 @@ const useStyles = (theme) => ({
   },
   root: {
     flex: '1 1 auto',
-    background: theme.palette.background.default,
+    backgroundColor: theme.palette.background.default,
     color: 'rgb(220,220,220)',
     display: 'flex',
     flexDirection: 'column',
@@ -49,6 +49,7 @@ const useStyles = (theme) => ({
       margin: `${theme.spacing(1)}`,
       marginLeft: 'auto',
       marginRight: 'auto',
+      marginBottom: '1em'
     },
     '& fieldset': {
       border: 'none',
@@ -61,9 +62,9 @@ const useStyles = (theme) => ({
   centered: {
     marginBottom: 155,
   },
-  welcomeTitle: {
+  title: {
     fontSize: 40,
-    margin: 0,
+    margin: '0.5em 0 0 0',
     fontWeight: '400',
   },
 })
@@ -77,15 +78,19 @@ export default (props) => {
   const overlayStyle = { background: 'rgba(0,0,0,0.7)', zIndex: 1300 }
   const [name, setName] = useState('')
   const onSubmit = async () => {
-    const {data: answer} = await axios.post(
-      `http://localhost:3001/channels/`,
+    const {data: answer} = await axios.post(`http://localhost:3001/channels/`,
+      {
+        channel: {
+          name: name
+        },
+        owner: oauth.email,
+      },
       {
         headers: {
           'Authorization': `Bearer ${oauth.access_token}`
         },
-        name: name,
-        owner: oauth.email,
-      })
+      }
+    )
     setName('')
     channels.push(answer)
     setChannels(channels)
@@ -113,8 +118,8 @@ export default (props) => {
         <div css={styles.root}>
           <div>
             <div style={{ textAlign: 'center', margin: '0 0 0 0' }}>
-              <h1 css={styles.welcomeTitle}>Create a new channel</h1>
-              <h3>Please enter its information</h3>
+              <h1 css={styles.title}>Create a new channel</h1>
+              <h3 style={{fontStyle: 'italic'}}>Please enter its information</h3>
             </div>
             <form css={styles.form} noValidate>
               <fieldset>
@@ -131,9 +136,19 @@ export default (props) => {
                   </Grid>
                 </Grid>
               </fieldset>
-              <fieldset style={{ display: "flex" }}>
+              <fieldset style={{ display: "flex", marginTop: '2em' }}>
                 <Button
-                  style={{ margin: "0 15% 0 auto" }}
+                  style={{ margin: "0 auto 0 auto" }}
+                  type="input"
+                  variant="contained"
+                  color="secondary"
+                  onClick={ () => {close(); onSubmit()}}
+                  endIcon={<CancelIcon />}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  style={{ margin: "0 auto 0 auto" }}
                   type="input"
                   variant="contained"
                   color="secondary"

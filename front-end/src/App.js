@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { useTheme } from '@material-ui/core/styles'
 /** @jsx jsx */
-import { jsx, ThemeContext } from '@emotion/core'
+import { jsx } from '@emotion/core'
 // Local
 import Oups from './Oups'
 import Footer from './Footer'
