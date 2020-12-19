@@ -1,4 +1,4 @@
-import { React } from 'react'
+import React from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Style
