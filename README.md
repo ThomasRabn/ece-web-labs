@@ -48,7 +48,7 @@ This web application is made to be simple, and we are going to explain in detail
   npm start
   ```
 
-- Start the front-end, it will be launched on port 3000
+- Start the front-end, it will be launched on port 3000. Make sure that you are on `127.0.0.1:3000` and not on `localhost:3000`, otherwise the login will not work as Dex only works with `127.0.0.1:3000`
 
   ```bash
   cd front-end

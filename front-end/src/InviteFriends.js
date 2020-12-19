@@ -81,6 +81,7 @@ const useStyles = (theme) => ({
   divform: {
     display: 'block',
     textAlign: 'center',
+    maxWidth: 400,
   },
   form: {
     display: 'inline-block',
@@ -117,13 +118,20 @@ export default (props) => {
     fetch()
   }, [oauth.access_token, inputFriend])
   const onSubmit = async () => {
-    friends.forEach(elem => delete elem.username)
+    // We save all the chosen users' IDs from friends in a new array
+    var idArray =  []
+    friends.forEach(element => {
+      idArray.push(element.id)
+    })
+    console.log(idArray)
     await axios.put(`http://localhost:3001/channels/`+chosenChannel.id+`/invite`,
       {
+        invitedUsers: idArray,
+      },
+      {
         headers: {
-          'Authorization': `Bearer ${oauth.access_token}`
-        },
-        invitedUsers: friends,
+        'Authorization': `Bearer ${oauth.access_token}`
+        }
       })
     setChosenChannel('')
     setFriends([])
@@ -161,42 +169,42 @@ export default (props) => {
               <h1 css={styles.title}>Invite friends to a channel</h1>
               <h3 style={{ fontStyle: 'italic' }}>Select the channel and the user you want to invite</h3>
             </div>
-            <form css={styles.form} noValidate>
-              <Grid>
-              <FormControl css={classes.formControl} variant="filled">
-                <InputLabel id="channel-label">Choose a channel</InputLabel>
-                <Select
-                  size='normal'
-                  value={chosenChannel}
-                  onChange={handleChange}
-                  labelId="channel-label"
-                  variant="filled"
-                  style={{textAlign: 'left'}}
-                >
-                  <MenuItem disabled value="">
-                    <em>None</em>
-                  </MenuItem>
-                  { channels.map( (channel, i) => (
-                    <MenuItem key={i} value={channel}>{channel.name}</MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>Make sure to choose a channel</FormHelperText>
-              </FormControl>
+            <form noValidate>
+              <Grid style={{marginBottom: 15}} >
+                <FormControl css={classes.formControl} variant="filled" fullWidth>
+                  <InputLabel id="channel-label">Choose a channel</InputLabel>
+                  <Select
+                    fullWidth
+                    value={chosenChannel}
+                    onChange={handleChange}
+                    labelId="channel-label"
+                    variant="filled"
+                    style={{textAlign: 'left'}}
+                  >
+                    <MenuItem disabled value="">
+                      <em>None</em>
+                    </MenuItem>
+                    { channels.map( (channel, i) => (
+                      <MenuItem key={i} value={channel}>{channel.name}</MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>Make sure to choose a channel</FormHelperText>
+                </FormControl>
               </Grid>
               <Grid>
-              <FormControl css={classes.formControl} variant="filled">
-                <Autocomplete
-                  multiple
-                  id="friends"
-                  value={friends}
-                  options={userToChoose}
-                  getOptionLabel={(option) => option.username}
-                  onChange={handleChangeAutocomplete}
-                  style={{textAlign: 'left'}}
-                  renderInput={(params) => <TextField {...params} value={inputFriend} onChange={handleChangeTextAutocomplete} label="Choose friends to invite" variant="filled" />}
-                />
-                <FormHelperText>The more you are, the more fun you have</FormHelperText>
-              </FormControl>
+                <FormControl css={classes.formControl} variant="filled" fullWidth>
+                  <Autocomplete
+                    multiple
+                    id="friends"
+                    value={friends}
+                    options={userToChoose}
+                    getOptionLabel={(option) => option.username}
+                    onChange={handleChangeAutocomplete}
+                    style={{textAlign: 'left'}}
+                    renderInput={(params) => <TextField {...params} value={inputFriend} onChange={handleChangeTextAutocomplete} label="Choose friends to invite" variant="filled" />}
+                  />
+                  <FormHelperText>The more you are, the more fun you have</FormHelperText>
+                </FormControl>
               </Grid>
               <fieldset style={{ display: "flex", marginTop: '2em' }}>
                 <Button

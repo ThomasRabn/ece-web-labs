@@ -26,7 +26,16 @@ app.get('/channels', authenticate, async (req, res) => {
 })
 
 app.post('/channels', authenticate, async (req, res) => {
-  const channel = await db.channels.create(req.body.channel, req.body.owner)
+  const channel = await db.channels.create(req.body.channel, req.user.email, req.body.invitedUsers)
+  // Add the channel in each user's channels list
+  if(channel) {
+    if (req.body.invitedUsers){
+      for(const elem of req.body.invitedUsers) {
+        console.log("Adding " + channel.id + " to " + elem)
+        await db.users.invite(elem, channel.id)
+      }
+    }
+  }
   res.status(201).json(channel)
 })
 
@@ -42,8 +51,12 @@ app.put('/channels/:id', authenticate, async (req, res) => {
 
 app.put('/channels/:id/invite', authenticate, async (req, res) => {
   const channel = await db.channels.invite(req.params.id, req.body)
-  for(const elem of req.body.invitedUsers) {
-    await db.users.invite(elem.id, req.params.id)
+  // Add the channel in each user's channels list
+  if(channel) {
+    for(const elem of req.body.invitedUsers) {
+      console.log("Adding " + req.params.id + " to " + elem)
+      await db.users.invite(elem, req.params.id)
+    }
   }
   res.json(channel)
 })

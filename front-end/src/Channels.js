@@ -5,8 +5,10 @@ import {useHistory} from 'react-router-dom'
 import { jsx } from '@emotion/core'
 // Core components
 import {
-  Link
+  Link, IconButton
 } from '@material-ui/core'
+// Icons
+import HomeIcon from '@material-ui/icons/HomeTwoTone'
 // Local
 import Context from './Context'
 import CreateChannel from './CreateChannel'
@@ -24,6 +26,9 @@ const styles = {
     color: 'white',
     fontWeight: 'bold',
     fontSize: '1.2em'
+  },
+  largeIcon: {
+    fontSize: '2em',
   }
 }
 
@@ -54,8 +59,19 @@ export default () => {
   }, [oauth, setChannels])
   return (
     <ul style={styles.channels}>
+      <li style={styles.channel} css={{textAlign: 'center'}} >
+        <IconButton
+          href={`/channels`}
+          onClick={ (e) => {
+            e.preventDefault()
+            history.push(`/channels`)
+          }}
+        >
+          <HomeIcon style={styles.largeIcon} />
+        </IconButton> 
+      </li>
       { channels.map( (channel, i) => (
-        <li key={i} css={styles.channel}>
+        <li key={i} style={styles.channel}>
           <Link
             href={`/channels/${channel.id}`}
             onClick={ (e) => {
@@ -68,7 +84,7 @@ export default () => {
           </Link>
         </li>
       ))}
-      <li css={styles.channel}>
+      <li style={styles.channel}>
         <CreateChannel>Add a channel</CreateChannel>
       </li>
     </ul>

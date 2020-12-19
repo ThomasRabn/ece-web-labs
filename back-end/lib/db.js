@@ -7,14 +7,27 @@ const db = level(__dirname + '/../db')
 
 module.exports = {
   channels: {
-    create: async (channel, ownerEmail) => {
-      if(!channel.name) throw Error('Invalid channel')
-      const id = uuid()
-      var owner = await module.exports.users.getByEmail(ownerEmail)
-      channel.ownerId = owner.id
-      channel = merge(channel, {usersId: [ owner.id ]})
-      await db.put(`channels:${id}`, JSON.stringify(channel))
-      return merge(channel, {id: id})
+    create: async (channel, ownerEmail, invitedUsers) => {
+      try {
+        if(!channel.name) throw Error('Invalid channel')
+        if(!ownerEmail) throw Error('Invalid owner')
+        const id = uuid()
+        var owner = await module.exports.users.getByEmail(ownerEmail)
+        channel.ownerId = owner.id
+        if(!invitedUsers) {
+          invitedUsers = [owner.id]
+        } else {
+          invitedUsers.push(owner.id)
+        }
+        channel = merge(channel, { idUsers: invitedUsers})
+        uniqueUsers = [...new Set(channel.idUsers)]
+        channel.idUsers = uniqueUsers
+        await db.put(`channels:${id}`, JSON.stringify(channel))
+        console.log(merge(channel, {id: id}))
+        return merge(channel, {id: id})
+      } catch {
+        return null
+      }
     },
     get: async (id) => {
       if(!id) throw Error('Invalid id')
@@ -55,6 +68,7 @@ module.exports = {
       var original = JSON.parse(data)
       const final = merge(original, { idUsers: channel.idUsers })
       await db.put(`channels:${id}`, JSON.stringify(final))
+      console.log(final)
       return final
     },
     delete: (id, channel) => {
@@ -237,12 +251,21 @@ module.exports = {
       store.users[id] = merge(original, user)
     },
     invite: async (id, idChannel) => {
+      if(!id) throw Error('Missing user id')
+      if(!idChannel) throw Error('Missing channel id')
       const data = await db.get(`users:${id}`)
       if(!data) throw Error('Unregistered channel id')
       var original = JSON.parse(data)
-      if(original.channels) { original.channels.push(idChannel) }
-      else                  { original.channels = [ idChannel ]}
+      if(original.channels) {
+        original.channels.push(idChannel)
+        uniqueChannels = [...new Set(original.channels)]
+        original.channels = uniqueChannels
+      }
+      else {
+        original.channels = [ idChannel ]
+      }
       await db.put(`users:${id}`, JSON.stringify(original))
+      console.log(original)
       return original
     },
     delete: (id, user) => {

@@ -1,14 +1,16 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Styles
-import { useTheme } from '@material-ui/core/styles'
+import { useTheme, makeStyles } from '@material-ui/core/styles'
 // Core components
 import {
-  Button, TextField, Grid, Link
+  Button, TextField, Grid, Link, FormControl, FormHelperText
 } from '@material-ui/core'
+// Lab
+import Autocomplete from '@material-ui/lab/Autocomplete'
 // Icons 
 import Send from '@material-ui/icons/Send'
 import CancelIcon from '@material-ui/icons/Cancel'
@@ -16,6 +18,13 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import Popup from 'reactjs-popup'
 // Local
 import Context from './Context'
+
+const useClasses = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+}))
 
 const useStyles = (theme) => ({
   channels: {
@@ -58,6 +67,11 @@ const useStyles = (theme) => ({
       },
     },
   },
+  divform: {
+    display: 'block',
+    textAlign: 'center',
+    maxWidth: 400,
+  },
   centered: {
     marginBottom: 155,
   },
@@ -70,19 +84,44 @@ const useStyles = (theme) => ({
 
 export default (props) => {
   const styles = useStyles(useTheme())
+  const classes = useClasses(useTheme())
   const history = useHistory()
   const { oauth, channels, setChannels } = useContext(Context)
+  const [name, setName] = useState('')
+  const [friends, setFriends ] = useState([])
+  const [ userToChoose, setUserToChoose ] = useState([])
+  const [ inputFriend, setInputFriend ] = useState('')
   // Popup variables
   const contentStyle = { backgroundColor: useTheme().palette.background.default }
   const overlayStyle = { background: 'rgba(0,0,0,0.7)', zIndex: 1300 }
-  const [name, setName] = useState('')
+  useEffect( () => {
+    const fetch = async () => {
+      try{
+        let {data: response} = await axios.get('http://localhost:3001/usernames/search?name='+inputFriend, {
+          headers: {
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        setUserToChoose(response)
+      }catch(err){
+        console.error(err)
+      }
+    }
+    fetch()
+  }, [oauth.access_token, inputFriend])
   const onSubmit = async () => {
+    // We save all the chosen users' IDs from friends in a new array
+    var idArray =  []
+    friends.forEach(element => {
+      idArray.push(element.id)
+    })
+    console.log(idArray)
     const {data: answer} = await axios.post(`http://localhost:3001/channels/`,
       {
         channel: {
           name: name
         },
-        owner: oauth.email,
+        invitedUsers: idArray,
       },
       {
         headers: {
@@ -97,6 +136,12 @@ export default (props) => {
   }
   const handleChange = (e) => {
     setName(e.target.value)
+  }
+  const handleChangeAutocomplete = (e, value) => {
+    setFriends(value)
+  }
+  const handleChangeTextAutocomplete = (e) => {
+    setInputFriend(e.target.value)
   }
   return (
     <Popup
@@ -115,24 +160,34 @@ export default (props) => {
     >
       {close => (
         <div css={styles.root}>
-          <div>
+          <div css={styles.divform}>
             <div style={{ textAlign: 'center', margin: '0 0 0 0' }}>
               <h1 css={styles.title}>Create a new channel</h1>
               <h3 style={{fontStyle: 'italic'}}>Please enter its information</h3>
             </div>
-            <form css={styles.form} noValidate>
-              <fieldset>
+            <form noValidate>
+              <fieldset style={{marginBottom: 15}}>
                 <Grid container spacing={1} justify="center">
-                  <Grid item>
-                    <TextField id="name" value={name} onChange={handleChange} name="name" label="Channel name" variant="filled" />
-                  </Grid>
+                  <FormControl css={classes.formControl} variant="filled" fullWidth>
+                    <TextField fullWidth id="name" value={name} onChange={handleChange} name="name" label="Channel name" variant="filled"  />
+                  </FormControl>
                 </Grid>
               </fieldset>
               <fieldset>
                 <Grid container spacing={1} justify="center">
-                  <Grid item>
-                    <TextField id="people" name="people" label="People to invite" variant="filled" />
-                  </Grid>
+                  <FormControl css={classes.formControl} variant="filled" fullWidth>
+                    <Autocomplete
+                      multiple
+                      id="friends"
+                      value={friends}
+                      options={userToChoose}
+                      getOptionLabel={(option) => option.username}
+                      onChange={handleChangeAutocomplete}
+                      style={{textAlign: 'left'}}
+                      renderInput={(params) => <TextField {...params} value={inputFriend} onChange={handleChangeTextAutocomplete} label="Choose friends to invite" variant="filled" />}
+                    />
+                    <FormHelperText>The more you are, the more fun you have</FormHelperText>
+                  </FormControl>
                 </Grid>
               </fieldset>
               <fieldset style={{ display: "flex", marginTop: '2em' }}>
