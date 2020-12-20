@@ -9,7 +9,7 @@ import { jsx } from '@emotion/core'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
 // Core components
 import {
-  Typography, Avatar, Button, CssBaseline, TextField, Container, Fab, Grid
+  Typography, Avatar, Button, CssBaseline, TextField, Container, Fab
 } from '@material-ui/core'
 // Icons
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
@@ -58,10 +58,11 @@ export default () => {
           'Authorization': `Bearer ${oauth.access_token}`
         },
       })
-      setName('')
-      setEmail('')
-      //const data = new FormData()
-      //data.append('file', image)
+    setName('')
+    setEmail('')
+    //const data = new FormData()
+    //data.append('file', image)
+    if (image) {
       await axios.post('http://localhost:3001/images/',
       {
         image: {
@@ -74,7 +75,8 @@ export default () => {
           'Authorization': `Bearer ${oauth.access_token}`
         },
       })
-        setImage('')
+      setImage('')
+    }
   }
   const handleChange = (e) => {
     setName(e.target.value)
@@ -86,11 +88,8 @@ export default () => {
     setImage(e.target.files)
     const file = e.target.files
     const data = new FormData()
-    const owner = oauth.email
     data.append('file', file[0])
-    axios.post("http://localhost:3001/upload", data, {
-      //owner : oauth.email
-   })
+    axios.post("http://localhost:3001/upload", data)
   }
   return (
     <Container component="main" maxWidth="xs">

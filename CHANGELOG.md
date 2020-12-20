@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.7] - Image upload - 20-12-2020
+
+### Added
+
+- **[front-end]** - Upload image button in the register page.
+- **[back-end]** - Images API to GET and POST their information in the database.
+
+### Modified
+
+- **[front-end]** - Register page: upload image button.
+
 ## [0.0.6] - Maximum security  - 19-12-2020
 
 ### Added
@@ -17,14 +28,16 @@ All notable changes to this project will be documented in this file.
 - **[back-end]** - Create Channel's invited users are persistent in the database.
 - **[back-end]** - Security reinforced, users face a 404 response if they try to access a unauthorized ressource.
 
-## [0.0.5] - Messages modification and deletion - 18-12-2020
+## [0.0.5] - Messages modification and deletion & Register page - 18-12-2020
 
 ### Added
 
 - **[back-end]** - Ability to delete your own messages.
 - **[back-end]** - Ability to modify your own messages.
+- **[back-end]** - User creation.
 - **[front-end]** - Popup to confirm deletion of a message.
 - **[front-end]** - Popup to modify a modification of a message.
+- **[front-end]** - Opening a register page when the account does not exists.
 
 ### Modified
 

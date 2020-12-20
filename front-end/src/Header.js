@@ -1,5 +1,5 @@
 
-import { useState,useContext,useEffect } from 'react'
+import { useState,useContext } from 'react'
 import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
@@ -51,34 +51,31 @@ export default ({
     e.stopPropagation()
     setOauth(null)
   }
-
- const [users, setUsers] = useState()
- const [images, setImages] = useState()
- const [path,setPath] = useState('thomsko.jpeg')
-
-const fetch = async () => {
-     try{
-       const {data: users} = axios.get(`http://localhost:3001/useremails/${oauth.email}`,{
-         headers: {
-           'Authorization': `Bearer ${oauth.access_token}`
-         },
-       })
-       setusers(users)
-       console.log('hello'+ users)
-       const {data: images} = axios.get(`http://localhost:3001/images/${users.id}`,{
-         headers: {
-           'Authorization': `Bearer ${oauth.access_token}`
-         },
-       })
-       setPath(images.name)
-       console.log(path)
-     }catch(err){
-       console.error(err)
-     }
-   }
-//if(path === '')
-//fetch()
-
+  const [users, setUsers] = useState()
+  // const [images, setImages] = useState()
+  const [path,setPath] = useState('thomsko.jpeg')
+  const fetch = async () => {
+    try {
+      const { data: usersResponse } = axios.get(`http://localhost:3001/useremails/${oauth.email}`, {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        },
+      })
+      setUsers(usersResponse)
+      console.log('hello' + users)
+      const { data: imagesResponse } = axios.get(`http://localhost:3001/images/${users.id}`, {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        },
+      })
+      setPath(imagesResponse.name)
+      console.log(path)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  if(path === '')
+    fetch()
   //console.log(path)
   return (
     <header css={styles.header}>
@@ -119,7 +116,6 @@ const fetch = async () => {
         :
           <span></span>
       }
-
     </header>
   );
 }

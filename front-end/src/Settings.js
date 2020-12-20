@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Style
@@ -121,7 +121,7 @@ const tutorialSteps = [
 
 export default () => {
   const theme = useTheme()
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     password: '',
     showPassword: false,
   })
@@ -133,22 +133,22 @@ export default () => {
     event.preventDefault()
   }
   //CheckBox
-  const [checked, setChecked] = React.useState(true)
+  const [checked, setChecked] = useState(true)
   const handleChangeCheck = (event) => {
     setChecked(event.target.checked)
   }
   //Tag
-  const [personName, setPersonName] = React.useState([])
+  const [personName, setPersonName] = useState([])
   const handleChangeChips = (event) => {
     setPersonName(event.target.value)
   }
   //Volume
-  const [valueV, setValueV] = React.useState(30)
+  const [valueV, setValueV] = useState(30)
   const handleChangeV = (event, newValue) => {
     setValueV(newValue)
   }
   //Image
-  const [activeStep, setActiveStep] = React.useState(0)
+  const [activeStep, setActiveStep] = useState(0)
   const maxSteps = tutorialSteps.length
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -163,6 +163,7 @@ export default () => {
 
   return (
     <div >
+      <h1>Your settings</h1>
       <form css={styles.root} noValidate autoComplete="off">
         <div>
           <Grid container spacing={1} alignItems="flex-end">

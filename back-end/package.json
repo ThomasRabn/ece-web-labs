@@ -47,6 +47,6 @@
     "reset": "node bin/reset",
     "develop": "node bin/init && node bin/start",
     "start": "node bin/start",
-    "test": "mocha 'test/**/*.js'"
+    "test": "echo 'TESTS_KEY=pHtiCQ1Jg3vhcYWfDtTVZzkd0kGawSi4' > .env; mocha 'test/**/*.js'; rm .env;"
   }
 }

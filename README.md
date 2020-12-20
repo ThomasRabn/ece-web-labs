@@ -42,8 +42,6 @@ This web application is made to be simple, and we are going to explain in detail
   npm install
   # (Optional) Test the back-end functionnalities
   npm test
-  # (Optional) Fill the database with initial data
-  npm run init
   # Start the back-end
   npm start
   ```
