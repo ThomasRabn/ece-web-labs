@@ -31,7 +31,7 @@ const styles = {
     fontSize: '2em',
   }
 }
-
+/******** Component for the Channel's list on screen's left side ********/
 export default () => {
   const {
     oauth,

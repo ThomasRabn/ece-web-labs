@@ -34,6 +34,7 @@ const useStyles = (theme) => ({
   },
 })
 
+/******** Webpage Architecture ********/
 export default () => {
   const {
     drawerVisible,

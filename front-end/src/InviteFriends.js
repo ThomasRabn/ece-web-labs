@@ -90,7 +90,7 @@ const useStyles = (theme) => ({
     textAlign: 'center',
   }
 })
-
+/******** Invite Friends Popup ********/
 export default (props) => {
   const styles = useStyles(useTheme())
   const classes = useClasses(useTheme())
@@ -103,6 +103,8 @@ export default (props) => {
   const contentStyle = { backgroundColor: useTheme().palette.background.default }
   const overlayStyle = { background: 'rgba(0,0,0,0.7)', zIndex: 1300 }
   useEffect( () => {
+    // Fetch the users in the database with a name starting with the input given
+    // Runs everytime the user add something in the textfield
     const fetch = async () => {
       try{
         let {data: response} = await axios.get('http://localhost:3001/usernames/search?name='+inputFriend, {
@@ -117,6 +119,7 @@ export default (props) => {
     }
     fetch()
   }, [oauth.access_token, inputFriend])
+  // Post to the back-end
   const onSubmit = async () => {
     // We save all the chosen users' IDs from friends in a new array
     var idArray =  []
@@ -138,6 +141,7 @@ export default (props) => {
     setUserToChoose([])
     setInputFriend('')
   }
+  // Handles
   const handleChange = (e) => {
     setChosenChannel(e.target.value)
   }

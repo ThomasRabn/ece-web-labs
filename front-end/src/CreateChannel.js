@@ -82,6 +82,7 @@ const useStyles = (theme) => ({
   },
 })
 
+/******** Popup for channel creation ********/
 export default (props) => {
   const styles = useStyles(useTheme())
   const classes = useClasses(useTheme())
@@ -109,6 +110,7 @@ export default (props) => {
     }
     fetch()
   }, [oauth.access_token, inputFriend])
+  // Post to create the channel
   const onSubmit = async () => {
     // We save all the chosen users' IDs from friends in a new array
     var idArray =  []
@@ -116,6 +118,7 @@ export default (props) => {
       idArray.push(element.id)
     })
     console.log(idArray)
+    // Post on the back-end's route
     const {data: answer} = await axios.post(`http://localhost:3001/channels/`,
       {
         channel: {
@@ -131,9 +134,11 @@ export default (props) => {
     )
     setName('')
     channels.push(answer)
+    // Move to the created channel
     setChannels(channels)
     history.push(`/channels/${answer.id}`)
   }
+  // Handles
   const handleChange = (e) => {
     setName(e.target.value)
   }

@@ -8,23 +8,20 @@ import axios from 'axios'
 // Core components
 import {
   TextField, Grid, InputLabel, InputAdornment, Input, Checkbox,
-  FormControl, ListItemText, Select, Typography, Slider, Chip,
-  Button, IconButton, Paper, MobileStepper, MenuItem, Container,
-  Switch, FormControlLabel, Avatar
+  FormControl, Typography, Slider, Button, IconButton, Container,
+  Switch, Avatar
 } from '@material-ui/core'
 // Icons
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import VolumeDown from '@material-ui/icons/VolumeDown'
 import VolumeUp from '@material-ui/icons/VolumeUp'
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import MailIcon from '@material-ui/icons/Mail'
-import Send from '@material-ui/icons/Send'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import LockIcon from '@material-ui/icons/Lock'
 import Brightness4Icon from '@material-ui/icons/Brightness4'
 import NewReleasesIcon from '@material-ui/icons/NewReleases'
+import SendIcon from '@material-ui/icons/Send'
 // Local
 import Context from './Context'
 
@@ -61,11 +58,12 @@ const useStyles = (theme) => ({
   }
 })
 
+/******** Settings Page with multiple Material UI Components ********/
+/******** AVATAR UPDATE IS WORKING ********/
 export default () => {
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
   const classes = useClasses(useTheme())
-  const theme = useTheme()
   // Password 1
   const [valuesPassword, setValuesPassword] = useState({
     password: '',
@@ -121,26 +119,12 @@ export default () => {
   const handleChangeCheck = (event) => {
     setChecked(event.target.checked)
   }
-  //Tag
-  const [personName, setPersonName] = useState([])
-  const handleChangeChips = (event) => {
-    setPersonName(event.target.value)
-  }
   //Volume
   const [valueV, setValueV] = useState(30)
   const handleChangeV = (event, newValue) => {
     setValueV(newValue)
   }
-  //Image
-  const [activeStep, setActiveStep] = useState(0)
-  //const maxSteps = tutorialSteps.length
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1)
-  }
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1)
-  }
-  //Profil
+  // Profile picture
   const [profil, setProfil] = useState(`http://127.0.0.1:3001/${oauth.email}.png`)
   const [image, setImage] = useState()
   const handleChangeProfil = (e) => {
@@ -149,7 +133,7 @@ export default () => {
   }
   //Drag and DropzoneArea
   //Limit to 1MB and to png type
-  const handleChangeFile = (files) =>{
+  const handleChangeFile = (files) => {
     if(files[0]) {
       let reader = new FileReader()
       reader.onloadend = () => {
@@ -157,6 +141,20 @@ export default () => {
         setProfil(reader.result)
       }
       reader.readAsDataURL(files[0])
+    }
+  }
+  const handleSubmitFile = (e) => {
+    e.preventDefault()
+    if (image) {
+      const data = new FormData()
+      data.append('file', image)
+      axios.post("http://localhost:3001/public", data, {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        },
+      })
+      setImage()
+      window.location.reload()
     }
   }
   return (
@@ -213,48 +211,90 @@ export default () => {
                 <Avatar alt="policier" src={`http://127.0.0.1:3001/policier.png`} onClick={handleChangeProfil}/>
               </Grid>
             </Grid>
-            <DropzoneArea
-              onChange={handleChangeFile}
-              acceptedFiles={['image/png']}
-              maxFileSize={1000000}
-            />
+            <Grid container justify="flex-end">
+            <Grid container direction="column" xs={6} style={{marginTop: '4.3em'}}>
+              <Grid container spacing={2} justify="flex-start" >
+                <h2 style={{marginBottom: 15}}>Change your password</h2>
+              </Grid>
+              <Grid container spacing={2} alignItems="flex-end">
+                <Grid item>
+                  <LockIcon />
+                </Grid>
+                <FormControl>
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input
+                    id="password"
+                    type={valuesPassword.showPassword ? 'text' : 'password'}
+                    value={valuesPassword.password}
+                    onChange={handleChangePassword('password')}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {valuesPassword.showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </Grid>
+              <br/>
+              <Grid container spacing={2} alignItems="flex-end">
+                <Grid item>
+                  <LockIcon />
+                </Grid>
+                <FormControl>
+                  <InputLabel htmlFor="verify-password">Verify password</InputLabel>
+                  <Input
+                    id="verify-password"
+                    type={valuesVerify.showPassword ? 'text' : 'password'}
+                    value={valuesVerify.password}
+                    onChange={handleChangeVerify('password')}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowVerify}
+                          onMouseDown={handleMouseDownVerify}
+                        >
+                          {valuesVerify.showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid container xs={6} direction="column" alignItems="flex-end" style={{marginTop: '1.5em'}}>
+              <DropzoneArea
+                onChange={handleChangeFile}
+                acceptedFiles={['image/png']}
+                maxFileSize={1000000}
+              />
+              <Grid item style={{marginTop: 5}}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  endIcon={<SendIcon />}
+                  onClick={handleSubmitFile}
+                >
+                  Send
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
           </Grid>
         </Container>
-        <Container css={styles.container} >
+        <Container css={styles.container} style={{marginTop: -15}} >
           <Grid container>
-            <Grid container xs={6} spacing={2} justify="flex-start" >
-              <h2 style={{marginBottom: 15}}>Change your password</h2>
-            </Grid>
             <Grid container xs={6} spacing={2} justify="flex-start" >
               <h2 style={{marginBottom: 15}}>Appearance & Information</h2>
             </Grid>
           </Grid>
           <Grid container>
-            <Grid container xs={6} spacing={2} alignItems="flex-end">
-              <Grid item>
-                <LockIcon />
-              </Grid>
-              <FormControl>
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input
-                  id="password"
-                  type={valuesPassword.showPassword ? 'text' : 'password'}
-                  value={valuesPassword.password}
-                  onChange={handleChangePassword('password')}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {valuesPassword.showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </Grid>
             <Grid container xs={6} spacing={2} jusitify="flex-start" alignItems="center" >
               <Grid item>
                 <Brightness4Icon />
@@ -265,31 +305,6 @@ export default () => {
           </Grid>
           <br/>
           <Grid container>
-            <Grid container xs={6} spacing={2} alignItems="flex-end">
-              <Grid item>
-                <LockIcon />
-              </Grid>
-              <FormControl>
-                <InputLabel htmlFor="verify-password">Verify password</InputLabel>
-                <Input
-                  id="verify-password"
-                  type={valuesVerify.showPassword ? 'text' : 'password'}
-                  value={valuesVerify.password}
-                  onChange={handleChangeVerify('password')}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowVerify}
-                        onMouseDown={handleMouseDownVerify}
-                      >
-                        {valuesVerify.showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </Grid>
             <Grid container xs={6} spacing={2} jusitify="flex-start" alignItems="center" >
               <Grid item>
                 <NewReleasesIcon />
@@ -305,8 +320,6 @@ export default () => {
           </Grid>
           <br/>
           <Grid container>
-            <Grid container xs={6} spacing={2} alignItems="center" >
-            </Grid>
             <Grid container xs={6} spacing={2} alignItems="center" >
               <Grid item>
                 <VolumeUp />

@@ -5,7 +5,9 @@ const microtime = require('microtime')
 const level = require('level')
 const db = level(__dirname + '/../db')
 
+/****** Database access ******/
 module.exports = {
+  /********* CHANNELS *********/
   channels: {
     create: async (channel, ownerEmail, invitedUsers) => {
       if(!channel.name) throw Error('Invalid channel')
@@ -60,33 +62,20 @@ module.exports = {
       }
       return channels
     },
-    update: async (id, channel) => {
-      const original = store.channel[id]
-      if(!original) throw Error('Unregistered channel id')
-      store.channel[id] = merge(original, channel)
+    invite: async (id, listUsers, userRequesting) => {
+      const data = await db.get(`channels:${id}`)
+      if(!data) throw Error('Unregistered channel id')
+      var channel = JSON.parse(data)
+      listUsers.invitedUsers.forEach(elem => {
+        channel.idUsers.push(elem)
+      })
+      const user = await module.exports.users.getByEmail(userRequesting.email)
+      if(!channel.idUsers.includes(user.id)) throw Error('Unauthorized')
+      await db.put(`channels:${id}`, JSON.stringify(channel))
+      return channel
     },
-    invite: async (id, channel, userRequesting) => {
-      try {
-        const data = await db.get(`channels:${id}`)
-        if(!data) throw Error('Unregistered channel id')
-        var original = JSON.parse(data)
-        channel.invitedUsers.forEach(elem => {
-          original.idUsers.push(elem)
-        })
-        const final = merge(original, { idUsers: channel.invitedUsers })
-        console.log(original)
-        await db.put(`channels:${id}`, JSON.stringify(original))
-        return original
-      } catch {
-        return null
-      }
-    },
-    delete: (id, channel) => {
-      const original = store.channels[id]
-      if(!original) throw Error('Unregistered channel id')
-      delete store.channels[id]
-    }
   },
+  /********* MESSAGES *********/
   messages: {
     create: async (channelId, req) => {
       if(!channelId) throw Error('Invalid channel')
@@ -119,6 +108,7 @@ module.exports = {
       const message = JSON.parse(data)
       return merge(message, {creation: creation})
     },
+    // List messages of a channel
     list: async (channelId, userEmail) => {
       if(!channelId) throw Error('Invalid id')
       if(!userEmail) throw Error('Invalid user')
@@ -145,6 +135,7 @@ module.exports = {
         })
       })
     },
+    // Update a message
     update: async (channelId, creation, req) => {
       if(!channelId) throw Error('Invalid channel')
       if(!creation) throw Error('Invalid message')
@@ -158,6 +149,7 @@ module.exports = {
       }
       else throw Error('Unauthorized')
     },
+    // Delete a message
     delete: async (channelId, creation, req) => {
       if(!channelId) throw Error('Invalid channel')
       if(!creation) throw Error('Invalid message')
@@ -171,10 +163,12 @@ module.exports = {
       else throw Error('Unauthorized')
     },
   },
+  /********* USERS *********/
   users: {
     create: async (user) => {
       try {
-        if(!user.username || !user.email /*|| /*await module.exports.users.getByUsername(user.username) || await module.exports.users.getByEmail(user.email)*/) {
+        // No username's duplicate
+        if(!user.username || !user.email || await module.exports.users.getByUsername(user.username) || await module.exports.users.getByEmail(user.email)) {
           throw Error('Invalid user')
         }
         const id = uuid()
@@ -193,10 +187,11 @@ module.exports = {
         const data = await db.get(`users:${id}`)
         const user = JSON.parse(data)
         return merge(user, {id: id})
-      } catch {
+      } catch (error) {
         return null
       }
     },
+    // Get a user with their email
     getByEmail: async (email) => {
       try {
         if(!email) throw Error('Invalid email')
@@ -204,16 +199,16 @@ module.exports = {
         userId = JSON.parse(userId)
         return await module.exports.users.get(userId.id)
       } catch (error) {
-        console.log(error)
         return null
       }
     },
+    // Get a user with their username
     getByUsername: async (username) => {
       try {
         if(!username) throw Error('Invalid username')
-      var userId = await db.get(`usernames:${username}`)
-      userId = JSON.parse(userId)
-      return module.exports.users.get(userId.id)
+        var userId = await db.get(`usernames:${username}`)
+        userId = JSON.parse(userId)
+        return module.exports.users.get(userId.id)
       } catch {
         return null
       }
@@ -235,6 +230,7 @@ module.exports = {
         })
       })
     },
+    // List the users' usernames
     listNames: async () => {
       return new Promise( (resolve, reject) => {
         const users = []
@@ -252,6 +248,7 @@ module.exports = {
         })
       })
     },
+    // List the 10 users with the closer username to what is given
     searchByName: async (nameStart) => {
       return new Promise( (resolve, reject) => {
         const users = []
@@ -270,11 +267,7 @@ module.exports = {
         })
       })
     },
-    update: (id, user) => {
-      const original = store.users[id]
-      if(!original) throw Error('Unregistered user id')
-      store.users[id] = merge(original, user)
-    },
+    // Invite a user to a channel
     invite: async (id, idChannel) => {
       if(!id) throw Error('Missing user id')
       if(!idChannel) throw Error('Missing channel id')
@@ -292,59 +285,6 @@ module.exports = {
       await db.put(`users:${id}`, JSON.stringify(original))
       return original
     },
-    delete: (id, user) => {
-      const original = store.users[id]
-      if(!original) throw Error('Unregistered user id')
-      delete store.users[id]
-    }
-  },
-  images: {
-    create: async (image, ownerEmail) => {
-      if(!image.name) throw Error('Invalid image')
-      const id = uuid()
-      //console.log("ownerEmail:"+ownerEmail)
-      var owner = await module.exports.users.getByEmail(ownerEmail)
-      //console.log("after call:"+owner)
-      image.ownerId = owner.id
-      image = merge(image)
-      const data = await db.put(`images:${owner.id}`, JSON.stringify(image))
-      //console.log(data)
-      return merge(image, {id: id})
-    },
-    get: async (id) => {
-      if(!id) throw Error('Invalid id')
-      //var owner = await module.exports.users.getByEmail(ownerEmail)
-      const data = await db.get(`images:${id}`)
-      const image = JSON.parse(data)
-      return merge(image, {id: id})
-    },
-    list: async () => {
-      return new Promise( (resolve, reject) => {
-        const images = []
-        db.createReadStream({
-          gt: "images:",
-          lte: "images" + String.fromCharCode(":".charCodeAt(0) + 1),
-        }).on( 'data', ({key, value}) => {
-          image = JSON.parse(value)
-          image.id = key.split(':')[1]
-          images.push(image)
-        }).on( 'error', (err) => {
-          reject(err)
-        }).on( 'end', () => {
-          resolve(images)
-        })
-      })
-    },
-    update: async (id, image) => {
-      const original = store.channel[id]
-      if(!original) throw Error('Unregistered image id')
-      store.channel[id] = merge(original, image)
-    },
-    //upload: async (image) => {
-      //console.log(image.avatar)
-      //let avatar = image.avatar;
-      //avatar.mv('./uploads/' + image.name);
-    //}
   },
   admin: {
     clear: async () => {

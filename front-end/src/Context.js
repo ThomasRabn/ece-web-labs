@@ -5,6 +5,7 @@ const Context = React.createContext()
 
 export default Context
 
+/******** Context Component for global variables ********/
 export const Provider = ({
   children
 }) => {

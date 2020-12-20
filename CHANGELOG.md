@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - First deployment - 20-12-2020
+
+Bump to version 1.0.0 - First deployment.
+
+### Modified
+
+- **[front-end]** - Settings page: Graphical updates
+
 ## [0.0.7] - Image upload - 20-12-2020
 
 ### Added

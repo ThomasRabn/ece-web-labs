@@ -9,8 +9,11 @@ import { jsx } from '@emotion/core'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
 // Core components
 import {
-  Typography, Avatar, Button, CssBaseline, TextField, Container, Fab, Grid
+  Typography, Avatar, Button, CssBaseline, TextField,
+  Container, Fab, Grid, Snackbar, Slide
 } from '@material-ui/core'
+// Lab
+import Alert from '@material-ui/lab/Alert'
 // Icons
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import AddIcon from '@material-ui/icons/Add'
@@ -53,6 +56,7 @@ const useClasses = (theme) => ({
   },
 })
 
+/******** Register page ********/
 export default () => {
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
@@ -62,6 +66,7 @@ export default () => {
   const [ image, setImage] = useState()
   const [ preview, setPreview ] = useState()
   const history = useHistory()
+  // Post username and avatar image
   const onSubmit = (e) => {
     e.preventDefault()
     if(name.length > 0) {
@@ -92,20 +97,42 @@ export default () => {
       setError(true)
     }
   }
+  // Handle username change
   const handleChange = (e) => {
     setError(false)
     setName(e.target.value)
   }
+  // Handle file addition or modification
   const handleFiles = (e) => {
     e.preventDefault()
     const file = e.target.files
-    let reader = new FileReader()
-    reader.onloadend = () => {
-      setImage(file[0])
-      setPreview(reader.result)
-    }
-    reader.readAsDataURL(file[0])
+    if (file[0].size < 1048576) {
+      let reader = new FileReader()
+      reader.onloadend = () => {
+        setImage(file[0])
+        setPreview(reader.result)
+      }
+      reader.readAsDataURL(file[0])
+    } else {
+      handleOpenSnackBar(TransitionDown)
+    }   
   }
+  // Snackbar
+  const [open, setOpen] = useState(false)
+  const [transition, setTransition] = useState(undefined);
+  const handleOpenSnackBar = (Transition) => {
+    setTransition(() => Transition)
+    setOpen(true)
+  }
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false);
+  }
+  function TransitionDown(props) {
+    return <Slide {...props} direction="down" />
+  }  
   return (
     <div css={classes.root}>
       <Container css={classes.centered} component="main" maxWidth="xs">
@@ -142,6 +169,7 @@ export default () => {
                     type="file"
                     onChange = {handleFiles}
                     accept="image/png"
+                    maxSize={10}
                   />
                   <Fab
                     color="secondary"
@@ -168,6 +196,17 @@ export default () => {
                 >
                   Set Changes
                 </Button>
+                <Snackbar
+                  open={open}
+                  autoHideDuration={4000}
+                  onClose={handleCloseSnackBar}
+                  TransitionComponent={transition}
+                  key={transition ? transition.name : ''}
+                >
+                  <Alert onClose={handleCloseSnackBar} severity="warning">
+                    Your file is too big! The maximum size is 1MB.
+                  </Alert>
+                </Snackbar>
               </Grid>
             </Grid>
           </form>

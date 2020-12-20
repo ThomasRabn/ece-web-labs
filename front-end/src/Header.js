@@ -70,7 +70,7 @@ export default ({
               <Grid item>
                 <Avatar alt="Profil" src={`http://127.0.0.1:3001/${oauth.email}.png`} />
               </Grid>
-              <Grid xs={1}/>
+              <Grid item xs={1}/>
               <Grid item> { oauth.email}</Grid>
             </Grid>
             <Grid container xs={2} justify="center">

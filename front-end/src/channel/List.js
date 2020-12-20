@@ -76,6 +76,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
+/****** Confirm Delete Popup *******/
 const ConfirmDelete = ({
   channel,
   message,
@@ -140,6 +141,7 @@ const ConfirmDelete = ({
   )
 }
 
+/****** Confirm Modify Popup *******/
 const ConfirmModify = ({
   channel,
   message,
@@ -218,6 +220,7 @@ const ConfirmModify = ({
   )
 }
 
+/****** Default Component returning the list of messages of the channel *******/
 export default forwardRef(({
   channel,
   messages,
@@ -259,6 +262,7 @@ export default forwardRef(({
   const handleCloseMenu = () => {
     setMenu(null)
   }
+  // If there are messages:
   const printMessages = (e) => {
     return (
       <ul>
@@ -311,6 +315,7 @@ export default forwardRef(({
       </ul>
     )
   }
+  // If no message:
   const emptyScreen = (e) => {
     return (
       <h2 css={styles.marged}>There is no message in this channel</h2>

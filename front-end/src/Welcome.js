@@ -34,6 +34,7 @@ const useStyles = (theme) => ({
   }
 })
 
+/******** Welcome/Home Page ********/
 export default () => {
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
@@ -84,7 +85,6 @@ export default () => {
                 Invite friends
               </Typography>
             </InviteFriends>
-
           </div>
         </Grid>
         <Grid item xs>

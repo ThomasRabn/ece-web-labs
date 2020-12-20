@@ -28,6 +28,8 @@ const useStyles = (theme) => ({
   }
 })
 
+/******** App Component ********/
+/******** Redirected routes ********/
 export default () => {
   const styles = useStyles(useTheme())
   const location = useLocation()

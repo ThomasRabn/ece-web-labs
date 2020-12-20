@@ -33,6 +33,7 @@ const useStyles = (theme) => ({
   }
 })
 
+/******** Component for a channel ********/
 export default () => {
   const history = useHistory()
   const { id } = useParams()
