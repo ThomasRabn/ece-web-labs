@@ -1,5 +1,6 @@
 
 import { useContext } from 'react'
+import {useHistory} from 'react-router-dom'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Styles
@@ -11,6 +12,7 @@ import {
 // Icons
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import MenuIcon from '@material-ui/icons/Menu'
+import HomeIcon from '@material-ui/icons/Home'
 // Local
 import Context from './Context'
 
@@ -43,6 +45,7 @@ export default ({
     oauth, setOauth,
     drawerVisible, setDrawerVisible
   } = useContext(Context)
+  const history = useHistory()
   const drawerToggle = (e) => {
     setDrawerVisible(!drawerVisible)
   }
@@ -63,16 +66,26 @@ export default ({
       </IconButton>
       {
         oauth ?
-          <div style={{width: '100%'}}>
-            <div style={{float: 'left'}} css={styles.verticallyCenter}>
-                <Grid container alignItems="center">
-                  <Grid item xs={2}>
-                    <Avatar alt="Profil" src={`http://127.0.0.1:3001/${oauth.email}.png`} />
-                  </Grid>
-                  <Grid item xs> {oauth.email}</Grid>
-                </Grid>
-            </div>
-            <div css={styles.toRight}>
+          <Grid container direction="row" xs={12} justify="space-between">
+            <Grid container xs={5} alignItems="center">
+              <Grid item>
+                <Avatar alt="Profil" src={`http://127.0.0.1:3001/${oauth.email}.png`} />
+              </Grid>
+              <Grid xs={1}/>
+              <Grid item> { oauth.email}</Grid>
+            </Grid>
+            <Grid container xs={2} justify="center">
+              <IconButton
+                href={`/channels`}
+                onClick={ (e) => {
+                  e.preventDefault()
+                  history.push(`/channels`)
+                }}
+              >
+                <HomeIcon />
+              </IconButton> 
+            </Grid>
+            <Grid container xs={5} justify="flex-end">
               <Button
                 variant="contained"
                 color="secondary"
@@ -81,9 +94,8 @@ export default ({
               >
                 Logout
               </Button>
-            </div>
-            <div style={{margin: '0 auto'}}></div>
-          </div>
+            </Grid>
+          </Grid>
         :
           <span></span>
       }
