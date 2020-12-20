@@ -63,10 +63,12 @@ app.get('/channels/:id', authenticate, async (req, res) => {
 // })
 
 app.post('/channels/:id/invite', authenticate, async (req, res) => {
-  const channel = await db.channels.invite(req.params.id, req.body)
+  const channel = await db.channels.invite(req.params.id, req.body, req.user)
   // Add the channel in each user's channels list
   if(channel) {
+    console.log(channel)
     for(const elem of req.body.invitedUsers) {
+      console.log(elem)
       await db.users.invite(elem, req.params.id)
     }
     res.status(200).json(channel)

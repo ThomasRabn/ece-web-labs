@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Modified
 
 - **[front-end]** - Register page: upload image button.
+- **[front-end]** - Settings page: upgraded
 
 ## [0.0.6] - Maximum security  - 19-12-2020
 

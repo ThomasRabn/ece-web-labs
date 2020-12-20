@@ -65,14 +65,18 @@ module.exports = {
       if(!original) throw Error('Unregistered channel id')
       store.channel[id] = merge(original, channel)
     },
-    invite: async (id, channel) => {
+    invite: async (id, channel, userRequesting) => {
       try {
         const data = await db.get(`channels:${id}`)
         if(!data) throw Error('Unregistered channel id')
         var original = JSON.parse(data)
-        const final = merge(original, { idUsers: channel.idUsers })
-        await db.put(`channels:${id}`, JSON.stringify(final))
-        return final
+        channel.invitedUsers.forEach(elem => {
+          original.idUsers.push(elem)
+        })
+        const final = merge(original, { idUsers: channel.invitedUsers })
+        console.log(original)
+        await db.put(`channels:${id}`, JSON.stringify(original))
+        return original
       } catch {
         return null
       }
