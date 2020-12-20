@@ -68,11 +68,20 @@ export default () => {
             )
           }
         </Route>
-        /*<Route path={"/register"}>
+        <Route path={"/register"}>
           {
+            oauth ? (
               <Register />
+            ) : (
+              <Redirect
+                to={{
+                  pathname: "/",
+                  state: { from: location }
+                }}
+              />
+            )
           }
-        </Route>*/
+        </Route>
         <Route path="/Oups">
           <Oups />
         </Route>

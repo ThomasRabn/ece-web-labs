@@ -172,7 +172,7 @@ module.exports = {
       try {
         if(!user.username || !user.email /*|| /*await module.exports.users.getByUsername(user.username) || await module.exports.users.getByEmail(user.email)*/) {
           throw Error('Invalid user')
-        } 
+        }
         const id = uuid()
         await db.put(`users:${id}`, JSON.stringify(user))
         await db.put(`usernames:${user.username}`, JSON.stringify({id: id}))
@@ -293,6 +293,54 @@ module.exports = {
       if(!original) throw Error('Unregistered user id')
       delete store.users[id]
     }
+  },
+  images: {
+    create: async (image, ownerEmail) => {
+      if(!image.name) throw Error('Invalid image')
+      const id = uuid()
+      //console.log("ownerEmail:"+ownerEmail)
+      var owner = await module.exports.users.getByEmail(ownerEmail)
+      //console.log("after call:"+owner)
+      image.ownerId = owner.id
+      image = merge(image)
+      const data = await db.put(`images:${owner.id}`, JSON.stringify(image))
+      //console.log(data)
+      return merge(image, {id: id})
+    },
+    get: async (id) => {
+      if(!id) throw Error('Invalid id')
+      //var owner = await module.exports.users.getByEmail(ownerEmail)
+      const data = await db.get(`images:${id}`)
+      const image = JSON.parse(data)
+      return merge(image, {id: id})
+    },
+    list: async () => {
+      return new Promise( (resolve, reject) => {
+        const images = []
+        db.createReadStream({
+          gt: "images:",
+          lte: "images" + String.fromCharCode(":".charCodeAt(0) + 1),
+        }).on( 'data', ({key, value}) => {
+          image = JSON.parse(value)
+          image.id = key.split(':')[1]
+          images.push(image)
+        }).on( 'error', (err) => {
+          reject(err)
+        }).on( 'end', () => {
+          resolve(images)
+        })
+      })
+    },
+    update: async (id, image) => {
+      const original = store.channel[id]
+      if(!original) throw Error('Unregistered image id')
+      store.channel[id] = merge(original, image)
+    },
+    //upload: async (image) => {
+      //console.log(image.avatar)
+      //let avatar = image.avatar;
+      //avatar.mv('./uploads/' + image.name);
+    //}
   },
   admin: {
     clear: async () => {

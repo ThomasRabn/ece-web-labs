@@ -3,6 +3,7 @@ const db = require('./db')
 const express = require('express')
 const cors = require('cors')
 const authenticator = require('./authenticator')
+var multer = require('multer')
 
 const app = express()
 const authenticate = authenticator({
@@ -43,7 +44,7 @@ app.post('/channels', authenticate, async (req, res) => {
     res.status(201).json(channel)
   } catch (error) {
     handleError(error, res)
-  }  
+  }
 })
 
 app.get('/channels/:id', authenticate, async (req, res) => {
@@ -160,5 +161,51 @@ const handleError = (error, res) => {
     res.status(400)
   }
 }
+
+// Images
+
+app.get('/images', authenticate, async (req, res) => {
+  const image = await db.images.list(req.headers)
+  res.json(image)
+})
+
+var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+      cb(null, 'uploads')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname )
+    }
+})
+
+var upload = multer({ storage: storage }).single('file')
+
+app.post('/upload',function(req, res) {
+    upload(req, res, function (err) {
+           if (err instanceof multer.MulterError) {
+               return res.status(500).json(err)
+           } else if (err) {
+               return res.status(500).json(err)
+           }
+      return res.status(200).send(req.file)
+
+    })
+
+});
+
+app.post('/images', authenticate, async (req, res) => {
+  const image = await db.images.create(req.body.image, req.body.owner)
+  res.status(201).json(image)
+})
+
+app.get('/images/:id', authenticate, async (req, res) => {
+  const image = await db.images.get(req.params.id)
+  res.json(image)
+})
+
+app.put('/images/:id', authenticate, async (req, res) => {
+  const image = await db.images.update(req.params.id, req.body)
+  res.json(image)
+})
 
 module.exports = app

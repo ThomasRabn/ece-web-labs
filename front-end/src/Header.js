@@ -1,12 +1,13 @@
 
-import { useContext } from 'react'
+import { useState,useContext,useEffect } from 'react'
+import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Styles
 import { useTheme } from '@material-ui/core/styles'
 // Core components
 import {
-  Button, IconButton, Avatar
+  Button, IconButton, Avatar, Grid
 } from '@material-ui/core';
 // Icons
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
@@ -16,7 +17,7 @@ import Context from './Context'
 
 const useStyles = (theme) => ({
   header: {
-    height: '2em',
+    height: '3em',
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.default,
     flexShrink: 0,
@@ -26,7 +27,7 @@ const useStyles = (theme) => ({
     marginRight: '1em',
   },
   verticallyCenter: {
-    marginTop: '0.5em',
+    width : '25em',
   },
   menu: {
     [theme.breakpoints.up('sm')]: {
@@ -50,6 +51,35 @@ export default ({
     e.stopPropagation()
     setOauth(null)
   }
+
+ const [users, setUsers] = useState()
+ const [images, setImages] = useState()
+ const [path,setPath] = useState('thomsko.jpeg')
+
+const fetch = async () => {
+     try{
+       const {data: users} = axios.get(`http://localhost:3001/useremails/${oauth.email}`,{
+         headers: {
+           'Authorization': `Bearer ${oauth.access_token}`
+         },
+       })
+       setusers(users)
+       console.log('hello'+ users)
+       const {data: images} = axios.get(`http://localhost:3001/images/${users.id}`,{
+         headers: {
+           'Authorization': `Bearer ${oauth.access_token}`
+         },
+       })
+       setPath(images.name)
+       console.log(path)
+     }catch(err){
+       console.error(err)
+     }
+   }
+//if(path === '')
+//fetch()
+
+  //console.log(path)
   return (
     <header css={styles.header}>
       <IconButton
@@ -64,9 +94,16 @@ export default ({
         oauth ?
           <div style={{width: '100%'}}>
             <div style={{float: 'left'}} css={styles.verticallyCenter}>
-              <Avatar alt="Profil" src="./image/thomsko.png" />
-              {oauth.email}
-              </div>
+                <Grid container alignItems="center">
+                  <Grid item xs={2}>
+                    <Avatar alt="Profil" src={{
+                      uri: path,
+                      cache: 'only-if-cached'
+                    }} />
+                  </Grid>
+                  <Grid item xs> {oauth.email}</Grid>
+                </Grid>
+            </div>
             <div css={styles.toRight}>
               <Button
                 variant="contained"

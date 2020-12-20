@@ -9,10 +9,11 @@ import { jsx } from '@emotion/core'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
 // Core components
 import {
-  Typography, Avatar, Button, CssBaseline, TextField, Container
+  Typography, Avatar, Button, CssBaseline, TextField, Container, Fab, Grid
 } from '@material-ui/core'
 // Icons
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import AddIcon from '@material-ui/icons/Add'
 //Local
 import Context from './Context'
 
@@ -30,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%',
     marginTop: theme.spacing(1),
+    '& > div' : {
+      marginTop: theme.spacing(20)
+    }
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -39,9 +43,10 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
   const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
-  const [ name , setName] = useState('')
-  const [ email , setEmail] = useState('')
-  const history = useHistory()
+  const [ name , setName] = useState()
+  const [ email , setEmail] = useState()
+  const [ image , setImage] = useState()
+  const history = useHistory();
   const onSubmit = async () => {
     await axios.post('http://localhost:3001/users/',
       {
@@ -55,15 +60,38 @@ export default () => {
       })
       setName('')
       setEmail('')
+      //const data = new FormData()
+      //data.append('file', image)
+      await axios.post('http://localhost:3001/images/',
+      {
+        image: {
+          name: image[0].name,
+        },
+        owner : oauth.email,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        },
+      })
+        setImage('')
   }
-
   const handleChange = (e) => {
     setName(e.target.value)
   }
   const handleChangeEmail = (e) => {
     setEmail(e.target.value)
   }
-
+  const handleFiles = (e) => {
+    setImage(e.target.files)
+    const file = e.target.files
+    const data = new FormData()
+    const owner = oauth.email
+    data.append('file', file[0])
+    axios.post("http://localhost:3001/upload", data, {
+      //owner : oauth.email
+   })
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -74,7 +102,7 @@ export default () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form css={styles.form} noValidate>
+        <form css={styles.form} method="POST" encType="multipart/form-data">
           <TextField
             variant="outlined"
             margin="normal"
@@ -95,6 +123,28 @@ export default () => {
             value = {email}
             onChange = {handleChangeEmail}
           />
+          <div>
+          <label htmlFor="avatar">
+            <input
+              style={{ display: "none" }}
+              id="avatar"
+              name="avatar"
+              type="file"
+              //value = {image}
+              onChange = {handleFiles}
+            />
+            <Fab
+              color="secondary"
+              size="small"
+              component="span"
+              aria-label="add"
+              variant="extended"
+              >
+                <AddIcon /> Upload photo
+              </Fab>
+          </label>
+          </div>
+          <div>
           <Button
             type="submit"
             fullWidth
@@ -109,6 +159,7 @@ export default () => {
           >
             Sign In
           </Button>
+          </div>
         </form>
       </div>
     </Container>
