@@ -124,7 +124,7 @@ export default (props) => {
       idArray.push(element.id)
     })
     console.log(idArray)
-    await axios.put(`http://localhost:3001/channels/`+chosenChannel.id+`/invite`,
+    await axios.post(`http://localhost:3001/channels/`+chosenChannel.id+`/invite`,
       {
         invitedUsers: idArray,
       },

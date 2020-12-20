@@ -19,6 +19,9 @@ module.exports = ({jwks_uri} = {}) => {
   if(!jwks_uri || process.env.TESTS_KEY){
     if(SHA256(process.env.TESTS_KEY) == 'b69413bd5c40706305c2275efe086d0fcada2781c80397fccc0ac9618b314bc2') {
       return async (req, res, next) => {
+        if(req.body.emailInit) {
+          req.user = { email: req.body.emailInit }
+        }
         req.user = { email: 'test@email.fr'  }
         next()
       }

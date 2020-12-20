@@ -21,66 +21,92 @@ app.get('/', (req, res) => {
 // Channels
 
 app.get('/channels', authenticate, async (req, res) => {
-  const channels = await db.channels.list(req.headers)
-  res.json(channels)
+  try {
+    const channels = await db.channels.listChannelOfUser(req.user.email)
+    res.json(channels)
+  } catch (error) {
+    handleError(error, res)
+  }
 })
 
 app.post('/channels', authenticate, async (req, res) => {
-  const channel = await db.channels.create(req.body.channel, req.user.email, req.body.invitedUsers)
-  // Add the channel in each user's channels list
-  if(channel) {
-    if (req.body.invitedUsers){
-      for(const elem of req.body.invitedUsers) {
-        console.log("Adding " + channel.id + " to " + elem)
-        await db.users.invite(elem, channel.id)
+  try {
+    const channel = await db.channels.create(req.body.channel, req.user.email, req.body.invitedUsers)
+    // Add the channel in each user's channels list
+    if(channel) {
+      if (channel.idUsers){
+        for(const elem of channel.idUsers) {
+          await db.users.invite(elem, channel.id)
+        }
       }
     }
-  }
-  res.status(201).json(channel)
+    res.status(201).json(channel)
+  } catch (error) {
+    handleError(error, res)
+  }  
 })
 
 app.get('/channels/:id', authenticate, async (req, res) => {
-  const channel = await db.channels.get(req.params.id)
-  res.json(channel)
+  try {
+    const channel = await db.channels.get(req.params.id, req.user.email)
+    res.status(200).json(channel)
+  } catch (error) {
+    handleError(error, res)
+  }
 })
 
-app.put('/channels/:id', authenticate, async (req, res) => {
-  const channel = await db.channels.update(req.params.id, req.body)
-  res.json(channel)
-})
+// app.put('/channels/:id', authenticate, async (req, res) => {
+//   const channel = await db.channels.update(req.params.id, req.body)
+//   res.json(channel)
+// })
 
-app.put('/channels/:id/invite', authenticate, async (req, res) => {
+app.post('/channels/:id/invite', authenticate, async (req, res) => {
   const channel = await db.channels.invite(req.params.id, req.body)
   // Add the channel in each user's channels list
   if(channel) {
     for(const elem of req.body.invitedUsers) {
-      console.log("Adding " + req.params.id + " to " + elem)
       await db.users.invite(elem, req.params.id)
     }
+    res.status(200).json(channel)
   }
-  res.json(channel)
 })
 
 // Messages
 
 app.get('/channels/:id/messages', authenticate, async (req, res) => {
-  const messages = await db.messages.list(req.params.id)
-  res.json(messages)
+  try {
+    const messages = await db.messages.list(req.params.id, req.user.email)
+    res.status(200).json(messages)
+  } catch (error) {
+    handleError(error, res)
+  }
 })
 
 app.post('/channels/:id/messages', authenticate, async (req, res) => {
-  const message = await db.messages.create(req.params.id, req)
-  res.status(201).json(message)
+  try {
+    const message = await db.messages.create(req.params.id, req)
+    res.status(201).json(message)
+  } catch (error) {
+    handleError(error, res)
+  }
 })
 
 app.delete('/channels/:id/messages/:idMessage', authenticate, async (req, res) => {
-  const message = await db.messages.delete(req.params.id, req.params.idMessage, req)
+  try {
+    const message = await db.messages.delete(req.params.id, req.params.idMessage, req)
   res.status(204).json(message)
+  } catch (error) {
+    handleError(error, res)
+  }
 })
 
 app.put('/channels/:id/messages/:idMessage', authenticate, async (req, res) => {
-  const message = await db.messages.update(req.params.id, req.params.idMessage, req)
-  res.json(message)
+  try {
+    const message = await db.messages.update(req.params.id, req.params.idMessage, req)
+    res.status(204).json(message)
+  } catch (error) {
+    handleError(error, res)
+  }
 })
 
 // Users
@@ -124,5 +150,15 @@ app.put('/users/:id', authenticate, async (req, res) => {
   const user = await db.users.update(req.body)
   res.json(user)
 })
+
+const handleError = (error, res) => {
+  if (error == 'Unauthorized') {
+    res.status(401)
+  } else if (error.toString().startsWith('Invalid')) {
+    res.status(400)
+  } else {
+    res.status(400)
+  }
+}
 
 module.exports = app

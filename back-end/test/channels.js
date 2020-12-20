@@ -17,14 +17,13 @@ describe('channels', () => {
       // Create a channel
       const {body: channel} = await supertest(app)
       .post('/channels')
-      .send({ channel: {name: 'channel 1'}, owner: 'test@email.fr' })
+      .send({ channel: {name: 'channel 1'} })
       .expect(201)
       // Check its return value
       channel.should.match({
         id: /^\w+-\w+-\w+-\w+-\w+$/,
         name: 'channel 1',
       })
-      console.log("here")
       // Check it was correctly inserted
       const {body: channels} = await supertest(app)
       .get('/channels')
@@ -37,7 +36,7 @@ describe('channels', () => {
       // Create a channel
       const {body: channel1} = await supertest(app)
       .post('/channels')
-      .send({ channel: {name: 'channel 1'}, owner: 'test@email.fr' })
+      .send({ channel: {name: 'channel 1'} })
       // Check it was correctly inserted
       const {body: channel} = await supertest(app)
       .get(`/channels/${channel1.id}`)
@@ -60,14 +59,15 @@ describe('channels', () => {
       // Create a channel
       await supertest(app)
       .post('/channels')
-      .send({ channel: {name: 'channel 1'}, owner: 'test@email.fr' })
+      .send({ channel: {name: 'channel 1' } })
       // Ensure we list the channels correctly
       const {body: channels} = await supertest(app)
       .get('/channels')
       .expect(200)
       channels.should.match([{
+        name: 'channel 1',
         id: /^\w+-\w+-\w+-\w+-\w+$/,
-        name: 'channel 1'
+        ownerId: /^\w+-\w+-\w+-\w+-\w+$/,
       }])
     })
   })
