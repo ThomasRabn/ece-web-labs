@@ -110,6 +110,12 @@ export default () => {
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value })
   }
+  //Profil
+  const [profil, setProfil] = useState(`http://127.0.0.1:3001/${oauth.email}.png`)
+  const handleChangeProfil =(e) =>{
+    setProfil(`http://127.0.0.1:3001/${e.target.alt}.png`)
+      console.log(profil)
+  }
   return (
     <div css={styles.root} >
       <div css={styles.marged}>
@@ -134,19 +140,35 @@ export default () => {
             </Grid>
             <Grid container xs={6} spacing={2} justify="center" alignItems="center" >
               <Grid item>
-                <Avatar alt="avatar" src={`http://127.0.0.1:3001/public/${oauth.email}.png`} className={classes.large} />
+                <Avatar alt="avatar" src={profil} className={classes.large} />
               </Grid>
               <Grid item>
                 <Typography>That's a pretty good picture!</Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid container xs={6} spacing={2} alignItems="flex-end">
-            <Grid item>
-              <AccountCircle />
+          <Grid container>
+            <Grid container xs={6} spacing={2} alignItems="flex-end">
+              <Grid item>
+                <AccountCircle />
+              </Grid>
+              <Grid item>
+                <TextField id="input-with-icon-grid" label="Name" />
+              </Grid>
             </Grid>
-            <Grid item>
-              <TextField id="input-with-icon-grid" label="Name" />
+            <Grid container xs={6} spacing={2} justify="center">
+                <Grid item>
+                  <Avatar alt="boulanger" src={`http://127.0.0.1:3001/boulanger.png`} onClick={handleChangeProfil}/>
+                </Grid>
+                <Grid item>
+                  <Avatar alt="medecin" src={`http://127.0.0.1:3001/medecin.png`} onClick={handleChangeProfil}/>
+                </Grid>
+                <Grid item>
+                  <Avatar alt="ouvrier" src={`http://127.0.0.1:3001/ouvrier.png`} onClick={handleChangeProfil}/>
+                </Grid>
+                <Grid item>
+                  <Avatar alt="policier" src={`http://127.0.0.1:3001/policier.png`} onClick={handleChangeProfil}/>
+                </Grid>
             </Grid>
           </Grid>
           <Grid container xs={6} spacing={2} alignItems="flex-end">
