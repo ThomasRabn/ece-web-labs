@@ -159,7 +159,8 @@ Thomas BASTIDE - thomas.bastide@edu.ece.fr
 
 - #### Avatar
 
-WORK IN PROGRESS
+  The first time,you login you are redirected to the register page. On this page you can choose your avatar. This avatar must have a `.png` type with a `maximum size of 1 MB`. You will also have the oppportunitie to modify this avatar later on the setting page.
+  The Setting page give you the opportunities to test some existing avatar or upload on other one with a drag and drop feature, with the same constraints given in the register page.
 
 ## Bonus
 
