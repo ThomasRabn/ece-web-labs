@@ -53,7 +53,6 @@ export default ({
     e.stopPropagation()
     setOauth(null)
   }
-
   return (
     <header css={styles.header}>
       <IconButton

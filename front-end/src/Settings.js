@@ -142,16 +142,22 @@ export default () => {
   }
   //Profil
   const [profil, setProfil] = useState(`http://127.0.0.1:3001/${oauth.email}.png`)
-  const handleChangeProfil =(e) =>{
+  const [image, setImage] = useState()
+  const handleChangeProfil = (e) => {
     setProfil(`http://127.0.0.1:3001/${e.target.alt}.png`)
-      console.log(profil)
+    console.log(profil)
   }
   //Drag and DropzoneArea
   //Limit to 1MB and to png type
-  const handleChangeFile = async (e) =>{
-    const data = new FormData()
-    const file = e[0]
-    //TODO envoyer le lien de l'image locale à la src du profil avatar
+  const handleChangeFile = (files) =>{
+    if(files[0]) {
+      let reader = new FileReader()
+      reader.onloadend = () => {
+        setImage(files[0])
+        setProfil(reader.result)
+      }
+      reader.readAsDataURL(files[0])
+    }
   }
   return (
     <div css={styles.root} >
@@ -208,9 +214,9 @@ export default () => {
               </Grid>
             </Grid>
             <DropzoneArea
-               onChange={handleChangeFile}
-               acceptedFiles={['image/png']}
-               maxFileSize={1000000}
+              onChange={handleChangeFile}
+              acceptedFiles={['image/png']}
+              maxFileSize={1000000}
             />
           </Grid>
         </Container>
@@ -300,7 +306,6 @@ export default () => {
           <br/>
           <Grid container>
             <Grid container xs={6} spacing={2} alignItems="center" >
-
             </Grid>
             <Grid container xs={6} spacing={2} alignItems="center" >
               <Grid item>
@@ -321,11 +326,6 @@ export default () => {
               </Grid>
             </Grid>
           </Grid>
-
-
-
-
-
         </Container>
       </div>
     </div>
