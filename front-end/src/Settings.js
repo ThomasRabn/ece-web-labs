@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react'
+import {DropzoneArea} from 'material-ui-dropzone'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Style
@@ -145,6 +146,13 @@ export default () => {
     setProfil(`http://127.0.0.1:3001/${e.target.alt}.png`)
       console.log(profil)
   }
+  //Drag and DropzoneArea
+  //Limit to 1MB and to png type
+  const handleChangeFile = async (e) =>{
+    const data = new FormData()
+    const file = e[0]
+    //TODO envoyer le lien de l'image locale à la src du profil avatar
+  }
   return (
     <div css={styles.root} >
       <div css={styles.marged}>
@@ -199,6 +207,11 @@ export default () => {
                 <Avatar alt="policier" src={`http://127.0.0.1:3001/policier.png`} onClick={handleChangeProfil}/>
               </Grid>
             </Grid>
+            <DropzoneArea
+               onChange={handleChangeFile}
+               acceptedFiles={['image/png']}
+               maxFileSize={1000000}
+            />
           </Grid>
         </Container>
         <Container css={styles.container} >
@@ -287,7 +300,7 @@ export default () => {
           <br/>
           <Grid container>
             <Grid container xs={6} spacing={2} alignItems="center" >
-            
+
             </Grid>
             <Grid container xs={6} spacing={2} alignItems="center" >
               <Grid item>
@@ -311,8 +324,8 @@ export default () => {
 
 
 
-        
-          
+
+
         </Container>
       </div>
     </div>
