@@ -15,24 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import CreateIcon from '@material-ui/icons/Create'
 // Local
 import Context from '../Context'
-// Markdown
-// import unified from 'unified'
-// import markdown from 'remark-parse'
-// import remark2rehype from 'remark-rehype'
-// import html from 'rehype-stringify'
-// Time
-import dayjs from 'dayjs'
-import calendar from 'dayjs/plugin/calendar'
-import updateLocale from 'dayjs/plugin/updateLocale'
-
-dayjs.extend(calendar)
-dayjs.extend(updateLocale)
-dayjs.updateLocale('en', {
-  calendar: {
-    sameElse: 'DD/MM/YYYY hh:mm A'
-  }
-})
-
+// Luxon
 var { DateTime } = require('luxon');
 
 const useStyles = (theme) => ({
@@ -267,12 +250,6 @@ export default forwardRef(({
     return (
       <ul>
       { messages.map((message) => (
-        // const {contents: content} = unified()
-            //   .use(markdown)
-            //   .use(remark2rehype)
-            //   .use(html)
-            //   .processSync(message.content)
-            // <span>{dayjs().calendar(message.creation)}</span>
         <li key={message.creation} css={styles.message} spacing={2}>
           <Grid
             container

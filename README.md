@@ -60,6 +60,8 @@ This web application is made to be simple, and we are going to explain in detail
 
 ## :student: Authors :man_student:
 
+ING4 SI Inter TD03
+
 Thomas RABIAN - thomas.rabian@edu.ece.fr \
 Thomas BASTIDE - thomas.bastide@edu.ece.fr
 
@@ -112,6 +114,10 @@ Thomas BASTIDE - thomas.bastide@edu.ece.fr
 
 - #### Git and DevOps <img height="19px" alt="devops" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Devops-toolchain.svg/1280px-Devops-toolchain.svg.png"/>
 
+  - ##### Tests
+
+  We have implemented some `unit tests` in the back-end that can be launched using `npm test`. Because we have an authenticate middleware, the `test` command create a `.env` file that allows the tests to bypass the requested `Authorization` header.
+
   - ##### Git and Versionning <img height="18px" alt="git" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png"/>
 
   Since years we have been using Git, it is only since September that we are learning about real DevOps methods and better Git usages. As we are using this GitHub repository since the beginning of the school year, it is a mix of different approaches and it is not well-structured.
@@ -159,9 +165,11 @@ Thomas BASTIDE - thomas.bastide@edu.ece.fr
 
 - #### Avatar
 
-  The first time,you login you are redirected to the register page. On this page you can choose your avatar. This avatar must have a `.png` type with a `maximum size of 1 MB`. You will also have the oppportunitie to modify this avatar later on the setting page.
-  The Setting page give you the opportunities to test some existing avatar or upload on other one with a drag and drop feature, with the same constraints given in the register page.
+  The first time,you login you are redirected to the register page. On this page you can choose your avatar and your username. This avatar must have a `.png` type with a `maximum size of 1 MB`. You will also have the oppportunitie to modify this avatar later on the settings page.
+  The Settings page give you the opportunities to test some existing avatar or upload on other one with a drag and drop feature, with the same constraints given in the register page.
 
 ## Bonus
 
-*place your comments*
+- ### Register Page
+
+  It might not really be a bonus, but we implemented a `Register page` that popup when opening the website for the first time. It actually popups when the user does not have an account in the database. On this page, the user can chose his **unique** username and a personalized profile avatar. If the picture is too big, it will open a `SnackBar` that will tell you that the file cannot be proceeded by the application.
