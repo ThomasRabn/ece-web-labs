@@ -6,6 +6,7 @@ const authenticator = require('./authenticator')
 var multer = require('multer')
 
 const app = express()
+app.use(express.static('public'));
 const authenticate = authenticator({
   jwks_uri: 'http://127.0.0.1:5556/dex/keys'
 })
@@ -171,16 +172,17 @@ app.get('/images', authenticate, async (req, res) => {
 
 var storage = multer.diskStorage({
       destination: function (req, file, cb) {
-      cb(null, 'uploads')
+      cb(null, 'public')
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname )
+      //console.log(req)
+      cb(null, req.user.email + '.png')
     }
 })
 
 var upload = multer({ storage: storage }).single('file')
 
-app.post('/upload',function(req, res) {
+app.post('/public', authenticate, async function(req, res) {
     upload(req, res, function (err) {
            if (err instanceof multer.MulterError) {
                return res.status(500).json(err)

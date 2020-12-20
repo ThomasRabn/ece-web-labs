@@ -1,6 +1,5 @@
 
-import { useState,useContext } from 'react'
-import axios from 'axios'
+import { useContext } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Styles
@@ -51,32 +50,7 @@ export default ({
     e.stopPropagation()
     setOauth(null)
   }
-  const [users, setUsers] = useState()
-  // const [images, setImages] = useState()
-  const [path,setPath] = useState('thomsko.jpeg')
-  const fetch = async () => {
-    try {
-      const { data: usersResponse } = axios.get(`http://localhost:3001/useremails/${oauth.email}`, {
-        headers: {
-          'Authorization': `Bearer ${oauth.access_token}`
-        },
-      })
-      setUsers(usersResponse)
-      console.log('hello' + users)
-      const { data: imagesResponse } = axios.get(`http://localhost:3001/images/${users.id}`, {
-        headers: {
-          'Authorization': `Bearer ${oauth.access_token}`
-        },
-      })
-      setPath(imagesResponse.name)
-      console.log(path)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-  if(path === '')
-    fetch()
-  //console.log(path)
+
   return (
     <header css={styles.header}>
       <IconButton
@@ -93,10 +67,7 @@ export default ({
             <div style={{float: 'left'}} css={styles.verticallyCenter}>
                 <Grid container alignItems="center">
                   <Grid item xs={2}>
-                    <Avatar alt="Profil" src={{
-                      uri: path,
-                      cache: 'only-if-cached'
-                    }} />
+                    <Avatar alt="Profil" src={`http://127.0.0.1:3001/${oauth.email}.png`} />
                   </Grid>
                   <Grid item xs> {oauth.email}</Grid>
                 </Grid>

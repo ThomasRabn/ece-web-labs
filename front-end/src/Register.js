@@ -9,7 +9,7 @@ import { jsx } from '@emotion/core'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
 // Core components
 import {
-  Typography, Avatar, Button, CssBaseline, TextField, Container, Fab
+  Typography, Avatar, Button, CssBaseline, TextField, Container, Fab, Grid
 } from '@material-ui/core'
 // Icons
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
@@ -46,6 +46,7 @@ export default () => {
   const [ name , setName] = useState()
   const [ email , setEmail] = useState()
   const [ image , setImage] = useState()
+  const [ img , setImg] = useState()
   const history = useHistory();
   const onSubmit = async () => {
     await axios.post('http://localhost:3001/users/',
@@ -66,7 +67,7 @@ export default () => {
       await axios.post('http://localhost:3001/images/',
       {
         image: {
-          name: image[0].name,
+          name: oauth.email + '.png',
         },
         owner : oauth.email,
       },
@@ -84,12 +85,17 @@ export default () => {
   const handleChangeEmail = (e) => {
     setEmail(e.target.value)
   }
-  const handleFiles = (e) => {
+  const handleFiles = async (e) => {
     setImage(e.target.files)
     const file = e.target.files
     const data = new FormData()
     data.append('file', file[0])
-    axios.post("http://localhost:3001/upload", data)
+    await axios.post("http://localhost:3001/public", data, {
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      },
+    })
+    setImg(`http://127.0.0.1:3001/${oauth.email}.png`)
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -99,9 +105,11 @@ export default () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Choose your Username
         </Typography>
         <form css={styles.form} method="POST" encType="multipart/form-data">
+         <Grid container alignItems="center" spacing={1}>
+         <Grid xs={12}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -113,37 +121,32 @@ export default () => {
             value = {name}
             onChange = {handleChange}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Email"
-            value = {email}
-            onChange = {handleChangeEmail}
-          />
-          <div>
-          <label htmlFor="avatar">
-            <input
-              style={{ display: "none" }}
-              id="avatar"
-              name="avatar"
-              type="file"
-              //value = {image}
-              onChange = {handleFiles}
-            />
-            <Fab
-              color="secondary"
-              size="small"
-              component="span"
-              aria-label="add"
-              variant="extended"
-              >
-                <AddIcon /> Upload photo
-              </Fab>
-          </label>
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={5}>
+            <label htmlFor="avatar">
+              <input
+                style={{ display: "none" }}
+                id="avatar"
+                name="avatar"
+                type="file"
+                onChange = {handleFiles}
+                accept="image/png"
+                />
+               <Fab
+                color="secondary"
+                size="small"
+                component="span"
+                aria-label="add"
+                variant="extended"
+                >
+                  <AddIcon /> Upload photo
+               </Fab>
+              </label>
+          </Grid>
+          <Grid item xs>
+            <Avatar css={styles.avatar} src={img}/>
+          </Grid>
+          <Grid xs={12}>
           <Button
             type="submit"
             fullWidth
@@ -153,12 +156,15 @@ export default () => {
             onClick = {(e) => {
               onSubmit()
               e.preventDefault()
-              history.push("/channels")
+              history.push("/")
+              //allows to refresh the avatar
+              window.location.reload(false)
             }}
           >
-            Sign In
+            Set Changes
           </Button>
-          </div>
+          </Grid>
+          </Grid>
         </form>
       </div>
     </Container>
